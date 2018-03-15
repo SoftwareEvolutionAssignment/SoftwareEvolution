@@ -1,24 +1,21 @@
-"""Module ui.clientmanager 
+""" Module ui.clientmanager 
 
-Class
------ 
-ClientManager a subclass of Application class.
+Class: 
+     ClientManager a subclass of Application class.
 
-Methods
-------- 
-getInstance(): Method to get instance of ClientManager object
+Methods: 
+       getInstance(): Method to get instance of ClientManager object
        
-Functions
----------
-newClient(): Creates new client
-listClients(): List stored clients in tuple 
-saveClients(): Writes stored clients to text file 
-retrieveClients(): Retrieves clients from dictionary based on client_id
-removeClient(): Removes client from dictionary
-modifyClient(): Modifies existing client 
-queryClientPosition(): Returns the position held for a specific security symbol
-listAllClientPositions(): List all positions for symbol client holds
-_menu() to _menu6(): Does operation according to menu item chosen in the GUI
+Functions:
+         newClient(): Creates new client
+         listClients(): List stored clients in tuple 
+         saveClients(): Writes stored clients to text file 
+         retrieveClients(): Retrieves clients from dictionary based on client_id
+         removeClient(): Removes client from dictionary
+         modifyClient(): Modifies existing client 
+         queryClientPosition(): Returns the position held for a specific security symbol
+         listAllClientPositions():
+         _menu() to _menu6(): Does operation according to menu item chosen in the GUI
          
 Created on 18 February 2018.
 
@@ -290,71 +287,51 @@ class ClientManager(Application):
         
         
     def _menu0(self):
-        #passes this method when called 
         pass
     
     
     def _menu1(self):
-        #list clients by calling the listClients() function
         self.listClients()
  
     
     def _menu2(self):
-        #creates new client and adds to database
         client = self.newClient()
         print("Added to the database the client:\n%s" % client)
   
     
     def _menu3(self):
-        #removes clients from database
         client_id = self._promptForID()
         removed_client = self.removeClient(client_id)
         print ("The client %s has been removed from the database." % removed_client.getName())
 
     
     def _menu4(self):
-        #modifies and updates client in database 
         client_id = self._promptForID()
         client = self.modifyClient(client_id)
         print("Client's details updated:\n%s" % client)   
         
     def _menu5(self):
-        #get position from retrieved client on specific security symbol
         client_id = self._promptForID()
         symbol = self._promptForSymbol()
         position = self.queryClientPosition(client_id, symbol)
         print("The client holds a position of %d stocks on security %s" % (position.getQuantity(), position.getSymbol()))
-    
     def _menu6(self):
-        #list all positions for specific client via id
         client_id = self._promptForID()
         self.listAllClientPositions(client_id)
                               
     def run(self):
-        """Creates list menu_items[] and inserts function methods 0-6.
-        
-        depending on what option is selected the method is called and the operations
-        inside the method are executed.
-        
-        Exception
-        ---------
-        @raise exception: ClientException, PositionException or DataUnavailable exception
-        """
-        menu_items = [self._menu0, self._menu1, 
-                      self._menu2, self._menu3, 
-                      self._menu4, self._menu5, 
-                      self._menu6]
-        try:
-            choice = self._menu()
-            if choice in range(0,7) :
-                menu_item = menu_items[choice]
-                menu_item() #gets the option number passed inside the array
-            else :
-                print ("Error: Undefined input ", file=sys.stderr)
+            menu_items = [self._menu0, self._menu1, self._menu2, self._menu3, self._menu4, self._menu5, self._menu6]
+            try:
+                choice = self._menu()
+                if choice in range(0,7) :
+                    menu_item = menu_items[choice]
+                    menu_item() #gets the option number passed inside the array
+                else :
+                    print ("Error: Undefined input ", file=sys.stderr)
                     
-        except (ClientException, PositionException, DataUnavailableEx) as ex :
+            except (ClientException, PositionException, DataUnavailableEx) as ex :
                 print("Exception: ", ex, file=sys.stderr)
 
 if __name__ == '__main__':
-    pass    #not calling the __init__ function of the client's manager when application starts
+    pass
         

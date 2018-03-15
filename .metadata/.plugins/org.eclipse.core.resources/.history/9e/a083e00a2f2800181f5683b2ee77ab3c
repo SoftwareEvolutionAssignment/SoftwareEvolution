@@ -1,29 +1,8 @@
-"""Module ui.clientmanager 
+'''
+Created on 18 Feb 2018
 
-Class
------ 
-ClientManager a subclass of Application class.
-
-Methods
-------- 
-getInstance(): Method to get instance of ClientManager object
-       
-Functions
----------
-newClient(): Creates new client
-listClients(): List stored clients in tuple 
-saveClients(): Writes stored clients to text file 
-retrieveClients(): Retrieves clients from dictionary based on client_id
-removeClient(): Removes client from dictionary
-modifyClient(): Modifies existing client 
-queryClientPosition(): Returns the position held for a specific security symbol
-listAllClientPositions(): List all positions for symbol client holds
-_menu() to _menu6(): Does operation according to menu item chosen in the GUI
-         
-Created on 18 February 2018.
-
-@author: Adil Al-Yasiri
-"""
+@author: adil
+'''
 import sys
 import re
 from datetime import datetime
@@ -42,33 +21,23 @@ from trades.client import ClientException
 
 
 class ClientManager(Application):
-    """A singleton Class simulating a menu-driven client application.
-    
-    The client manager show options to user and responds to user input 
-    by calling appropriate function. The class also contains useful methods
-    for querying,creating, updating and deleting clients and their positions.
-    
-    Variables
-    ---------
-    instance : 'object'
-        stores single instance of client manager object
-    """
+    '''
+    A singleton Class simulating a menu-driven client application 
+    '''
     
     instance = None
     
+
     @staticmethod
     def getInstance():
-        """Returns instance of ClientManager if an instance has not been created."""
         if not ClientManager.instance :
             ClientManager.instance = ClientManager(Application.getClientsFileName())
         return ClientManager.instance
     
     def __init__(self, clients_file_name):
-        """Constructor takes argument for clients file name to initialise super variable
-        
-        self.clients_file_name, creates a dictionary to store clients and a variable to 
-        store the last client id in the dictionary.
-        """
+        '''
+        Constructor
+        '''
         
         self.clients_file_name = clients_file_name 
         
@@ -77,28 +46,22 @@ class ClientManager(Application):
         self.last_client_id = 0;
         
         with open(self.clients_file_name, "r") as clients_file :
-            #Read the last number of client stored in the file 
             self.last_client_id = int(clients_file.readline())
             for line in clients_file :
-                #remove the extra spaces before and after string
                 line = line.rstrip()
-                #split properties using ':'
+                
                 (clt_id, clt_name, clt_email, clt_pos) = line.split(":")
-                #store client in trades.Client class 
                 client = Client(int(clt_id), clt_name, clt_email)
                 if len(clt_pos) > 0 :
-                    #if positions greater than 1 split using a ','
                     positions = clt_pos.split(",")
                     for position in positions :
-                        #do another split of each position property using a '|'
                         (symbol, qty, acq_date, mod_date) = position.split("|")
-                        #add client position by calling the addPosition() function and pass arguments
                         client.addPosition(Position(symbol, int(qty),
                                                     datetime.strptime(acq_date, Position.DATE_FORMAT).date(),
                                                     datetime.strptime(mod_date, Position.DATE_FORMAT).date()
                                                     )
                                             )
-                #store client in our dictionary named client    
+                    
                 self.clients[clt_id] = client
                 #The next line was removed because last id is now saved in the file
                 #self.last_client_id = (client.getID() if client.getID() > self.last_client_id else self.last_client_id)
@@ -114,99 +77,45 @@ class ClientManager(Application):
     #===========================================================================
      
     def newClient(self):
-        """Creates a new client.
-        
-        Variables
-        --------
-        client_name: expected input 'string'
-        client_email: expected input 'string' with embedded @ symbol
-        
-        Exceptions
-        ---------
-        @raise exception:ClientException error for invalid input 
-        """
         client_name = input ("Please enter the client's name: ")
         client_email = input ("Please enter the client's email address: ")
-        
-        if re.match("[^0-9]", client_name) is not None:
-            raise ClientException("Client name can only contain characters")
+         
         if client_email.find("@") >= 0 :
             self.last_client_id += 1
             #creates client
             my_client = Client(self.last_client_id, client_name, client_email)
-            #puts created clients in the diction clients
+            #puts it in list
             self.clients[str(my_client.getID())] = my_client
             return my_client
         else :
             raise ClientException ("Client cannot be created; invalid email address")
 
     def listClients(self):
-        """List the clients stored in dictionary clients."""
         for client in self.clients.values() :
             print(str(client))
             
     def saveClients(self):
-        """Save clients to same text file.
-        
-        first copy last id of client created then write it to file, after which all
-        clients saved in dictionary self.clients are sorted by id number and written
-        to text file
-        """
         with open(self.clients_file_name, "w") as clients_file :
             clients_file.write("%d\n" % self.last_client_id)
             for clt_id in sorted(self.clients.keys()) :
                 clients_file.write(str(self.clients[clt_id]) + "\n")
                 
     def retrieveClient(self, client_id):
-        """Retrieves client based on input client's id.
-        
-        the function retrieves a client from the clients' dictionary based on client_id
-        raises an exception if client_id does not exist.
-        
-        Arguments
-        ---------
-        client_id: type integer
-            id to retrieve particular client from dictionary
-        
-        Exception
-        ---------
-        @raise exception: ClientException Error if user does not exist
-        """
+        #
+        # A function retrieves a client the clients' dictionary based on client_id
+        # raises an exception if client_id does not exist
+        #
         if client_id in self.clients :
             return self.clients[str(client_id)]
         else :
             raise ClientException("Client does not exist")
         
     def removeClient(self, client_id):
-        """Removes clients from clients' dictionary based on client_id input.
-        
-        Arguments
-        ---------
-        client_id: type integer
-            id to remove particular client from dictionary
-        """
         client = self.retrieveClient(client_id)
         return self.clients.pop(str(client.getID()))
 
 
     def modifyClient(self, client_id):
-        """Modifies existing client name and email details. 
-        
-        Arguments
-        ---------
-        client_id: of type 'string'
-            used to identify client to modify by calling the retrieveClient(client_id)
-            function.
-            
-        Methods
-        -------
-        setName(): method call to set new name for client
-        setEmail(): method call to set new email for client
-        
-        Returns
-        -------
-        new modified client.
-        """
         client = self.retrieveClient(client_id)
         print ("You have asked to change the details of the client: ", client)
         response = input ("Do you want to change the name [y,n]? ")
@@ -223,35 +132,18 @@ class ClientManager(Application):
      
         
     def queryClientPosition(self, client_id, symbol):
-        """For a retrieved client return position held for specific security symbol.
-        
-        Arguments
-        ---------
-        client_id: type integer
-        symbol: type 'string'
-        
-        Returns
-        -------
-        specific position for client retrieved 
-        
-        Note
-        ----
-        May raise the PositionException Error
-        """
-        
+        #
+        # For a retrieved client return the position held for a specific security (symbol)
+        # It may raise the PositionException
+        #
         client = self.retrieveClient(client_id)
         return client.getPosition(symbol)
     
     
     def listAllClientPositions(self, client_id):
-        """List positions held for specific security by retrieved client.
-        
-        Argument
-        --------
-        client_id: type integer
-            To retrieve client to list position for.
-        """
-        
+        #
+        # For a retrieved client return the position held for a specific security
+        #
         client = self.retrieveClient(client_id)
         positions = client.getPositions()
         if not positions :
@@ -263,16 +155,6 @@ class ClientManager(Application):
                 
     
     def _menu(self):
-        """Display user interface for user interaction with the system
-        
-        Returns: 
-        input: type integer
-            string is cast to an integer using the int()
-        
-        Exception
-        ---------
-        @return: ValueError exception for inappropriate input
-        """
         print("""Client's Manager Menu
             Please choose an option: 
             1:    List all clients.
@@ -290,71 +172,51 @@ class ClientManager(Application):
         
         
     def _menu0(self):
-        #passes this method when called 
         pass
     
     
     def _menu1(self):
-        #list clients by calling the listClients() function
         self.listClients()
  
     
     def _menu2(self):
-        #creates new client and adds to database
         client = self.newClient()
         print("Added to the database the client:\n%s" % client)
   
     
     def _menu3(self):
-        #removes clients from database
         client_id = self._promptForID()
         removed_client = self.removeClient(client_id)
         print ("The client %s has been removed from the database." % removed_client.getName())
 
     
     def _menu4(self):
-        #modifies and updates client in database 
         client_id = self._promptForID()
         client = self.modifyClient(client_id)
         print("Client's details updated:\n%s" % client)   
         
     def _menu5(self):
-        #get position from retrieved client on specific security symbol
         client_id = self._promptForID()
         symbol = self._promptForSymbol()
         position = self.queryClientPosition(client_id, symbol)
         print("The client holds a position of %d stocks on security %s" % (position.getQuantity(), position.getSymbol()))
-    
     def _menu6(self):
-        #list all positions for specific client via id
         client_id = self._promptForID()
         self.listAllClientPositions(client_id)
                               
     def run(self):
-        """Creates list menu_items[] and inserts function methods 0-6.
-        
-        depending on what option is selected the method is called and the operations
-        inside the method are executed.
-        
-        Exception
-        ---------
-        @raise exception: ClientException, PositionException or DataUnavailable exception
-        """
-        menu_items = [self._menu0, self._menu1, 
-                      self._menu2, self._menu3, 
-                      self._menu4, self._menu5, 
-                      self._menu6]
-        try:
-            choice = self._menu()
-            if choice in range(0,7) :
-                menu_item = menu_items[choice]
-                menu_item() #gets the option number passed inside the array
-            else :
-                print ("Error: Undefined input ", file=sys.stderr)
+            menu_items = [self._menu0, self._menu1, self._menu2, self._menu3, self._menu4, self._menu5, self._menu6]
+            try:
+                choice = self._menu()
+                if choice in range(0,7) :
+                    menu_item = menu_items[choice]
+                    menu_item() #gets the option number passed inside the array
+                else :
+                    print ("Error: Undefined input ", file=sys.stderr)
                     
-        except (ClientException, PositionException, DataUnavailableEx) as ex :
+            except (ClientException, PositionException, DataUnavailableEx) as ex :
                 print("Exception: ", ex, file=sys.stderr)
 
 if __name__ == '__main__':
-    pass    #not calling the __init__ function of the client's manager when application starts
+    pass
         
