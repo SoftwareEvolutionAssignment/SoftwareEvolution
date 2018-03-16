@@ -13,12 +13,13 @@ Functions
 newClient(): Creates new client
 listClients(): List stored clients in tuple 
 saveClients(): Writes stored clients to text file 
-retrieveClients(): Retrieves clients from dictionary based on client_id
-removeClient(): Removes client from dictionary
-modifyClient(): Modifies existing client 
-queryClientPosition(): Returns the position held for a specific security symbol
-listAllClientPositions(): List all positions for symbol client holds
+retrieveClients(client_id): Retrieves clients from dictionary based on client_id
+removeClient(client_id): Removes client from dictionary
+modifyClient(client_id): Modifies existing client 
+queryClientPosition(client_id, symbol): Returns the position held for a specific security symbol
+listAllClientPositions(client_id): List all positions for symbol client holds
 _menu() to _menu6(): Does operation according to menu item chosen in the GUI
+run() : manages menu options and users input 
          
 Created on 18 February 2018.
 
@@ -32,11 +33,11 @@ from ui.abstractapp import Application
 
 from server.price import PriceServer
 from server.alphavantage import Alphavantage
+from server.dataunavailable import DataUnavailableEx
+
 from trades.client import Client
 from trades.position import Position
-
 from trades.PositionException import PositionException
-from server.dataunavailable import DataUnavailableEx
 from trades.client import ClientException
 
 

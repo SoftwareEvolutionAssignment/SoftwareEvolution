@@ -1,8 +1,30 @@
-'''
-Created on 20 Feb 2018
+"""Module ui.traidingappl
 
-@author: adil
-'''
+Class
+-----
+TradingApplication: A subclass of the Application class. 
+
+Methods
+-------
+getInstance(): Returns instance of TradingApplication
+
+Functions
+---------
+_transactions_between(from_date, to_date):function called in listTransactionsInPeriod
+saveTransactions(): save transactions to transaction file 
+sell(client, symbol): sell positions of security owned by client
+buy(client, symbol): buy positions of security for client
+queryPrice(symbol): ask current price of security symbol
+listAllTransactions(): list all transactions
+listTransactionsPerClient(client): list all transactions for clients
+listTransactionsInPeriod(from_date, to_date): list transactions between two dates 
+_menu() to _menu8(): Displays operation based on user input 
+run(): manages menu options and user input 
+
+Created on 20 February 2018
+
+@author: Adil Al-Yasiri
+"""
 
 
 import sys
@@ -12,6 +34,7 @@ import bisect
 
 from ui.abstractapp import Application
 from ui.clientmanager import ClientManager
+from ui.symbolDoesNotExist import SymbolDoesNotExistError
 
 from server import price
 from server.price import PriceServer
@@ -25,21 +48,28 @@ from trades.order import TransType
 from trades.PositionException import PositionException
 from trades.client import ClientException
 
-
-class SymbolDoesNotExistError(Exception):
-    """
-        Symbol not listed in stock exchange
-    """
-    
 class TradingApplication(Application):
-    '''
-    Trading Application Class, a singleton for selling and buying securities
-    '''
+    """Trading Application Class, a singleton for selling and buying securities.
+    
+    The trading application is used to buy,sell, query, store and list transactions
+    made by clients. It also contains its on menu system that enables different operations
+    to be carried out based on user input.
+    
+    Variables
+    ---------
+    instance initialised to none used to store object when created 
+    """
 
     instance = None
 
     @staticmethod
     def getInstance():
+        """Creates and intailises variable instance for Trading Application class 
+        
+        Returns
+        -------
+        TradingApplication instance object.
+        """
         if not TradingApplication.instance :
             TradingApplication.instance = TradingApplication(
                                                 Application.getConfigFileName(), 
@@ -48,9 +78,17 @@ class TradingApplication(Application):
         return TradingApplication.instance
     
     def __init__(self, config_file_name, transactions_file_name):
-        '''
-        Constructor
-        '''
+        """Constructor for TradingApplication takes arguments for configuration and transaction setup.
+        
+        alpha.conf is set in the PriceServer, and files that are read from the file
+        are stored in a dictionary called transactions.
+        
+        Arguments
+        ---------
+        config_file_name: takes name of configuration filename alpha.conf
+        transaction_file_name: takes name of transaction filename transactions.txt
+        
+        """
         self.price_srvr = PriceServer(Alphavantage(config_file_name))
         self.transactions_file_name = transactions_file_name
         self.broker = OrderBroker.getInstance()
@@ -59,10 +97,10 @@ class TradingApplication(Application):
         
         with open(self.transactions_file_name, "r") as transactions_file :
             for line in transactions_file :
-                line = line.rstrip()
+                line = line.rstrip()    #remove any trailing spaces 
                 
                 (trans_date, clt_id, tran_type, symbol, price, qty) = line.split("|")
-                transaction = Transaction()
+                transaction = Transaction() #class in module trades.transaction.py
                 transaction.clientID = int(clt_id)
                 transaction.date = datetime.datetime.strptime(trans_date, Transaction.DATE_FORMAT)  #Convert to date object
                 transaction.trans_type = TransType(int(tran_type))
