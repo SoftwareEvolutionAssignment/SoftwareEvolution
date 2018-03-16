@@ -93,7 +93,7 @@ class TradingApplication(Application):
         self.transactions_file_name = transactions_file_name
         self.broker = OrderBroker.getInstance()
         
-        self.transactions = {}
+        self.transactions = {}  #create a dictionary named transactions 
         
         with open(self.transactions_file_name, "r") as transactions_file :
             for line in transactions_file :
@@ -108,14 +108,14 @@ class TradingApplication(Application):
                 transaction.price = float(price)
                 transaction.quantity = int(qty)
                 
-                self.transactions[transaction.date] = transaction
+                self.transactions[transaction.date] = transaction   #insert each transaction object as value for key transaction.date
     
               
     #Helper function implementing an efficient algorithm to return all transactions between two dates
     #The function returns a list of all found transactions Order ( nlog(N) )
     def _transactions_between(self, from_date, to_date):
         
-        #First get a sorted list of all transactions dict keys (transaction dates)
+        #First get a sorted list of all transactions dictionary keys (transaction dates)
         date_list = sorted(self.transactions.keys())
         
         #Then get location of first transaction on the from_date
@@ -133,35 +133,62 @@ class TradingApplication(Application):
     
     
     def saveTransactions(self):
+        """Saves transactions to a text file by writing to it."""
+        
         with open(self.transactions_file_name, "w") as trans_file :
             for trans_date in sorted(self.transactions.keys()) :
                 trans_file.write(str(self.transactions[trans_date]) + "\n")            
                 
-    #method that we have to fix selling stocks             
+                
     def sell(self, client, symbol):
+        """Sell positions to client based on what symbol client choose.
+        
+        if client has security with available positions to sell, client proposes an ask
+        price for a particular number of positions that they wish to sell. if ask price 
+        is less than or equal to current trading price order is FULFILLED else it is KILLED.
+        
+        Arguments
+        ---------
+        client: client's id to identify which client is requesting to sell
+        symbol: which security symbol already owned by client do they wish to sell positions
+        
+        Exceptions
+        ----------
+        @raise exception: 
+            TransactionError: order failed 
+            TypeError: user input invalid 
+            PositionException: client does not hold valid number of positions they are requesting to sell
+        """
         if self.broker.checkSecurityBySymbol(symbol) and client.hasPosition(symbol) :
             try:
-                max_qty = client.getPosition(symbol).getQuantity()
+                max_qty = client.getPosition(symbol).getQuantity()  
                 print("You can sell a maximum of %d" % max_qty)
                 quantity = int(self._promptForQuantity())
                 if quantity <= max_qty : 
                     ask_price = float(self._promptForPrice())
-                    sell_order = Order(int(client.getID()), symbol, TransType.SELL, quantity, ask_price)
-                    #do if statement to check that the ask price is less than or equal to the trading price
-                    print("You asked to sell %d stocks of %s, which is now trading at %s" % 
+                    if ask_price <= float(self.queryPrice(symbol)) :
+                        sell_order = Order(int(client.getID()), symbol, TransType.SELL, quantity, ask_price)
+                        print("You asked to sell %d stocks of %s, which is now trading at %s" % 
                                     (quantity, symbol, self.queryPrice(symbol))
                           )
-                    response = input("Are you happy to submit your order [y/n]? ")
-                    if re.search(r"^[Yy]", response):
-                        transaction = self.broker.executeOrder(sell_order)
-                        if transaction :
-                            transaction.commit()
-                            self.transactions[transaction.date] = transaction
-                        else :
-                            raise TransactionError("Sell order failed")
+                        response = input("Are you happy to submit your order [y/n]? ")
+                        if re.search(r"^[Yy]", response):
+                            transaction = self.broker.executeOrder(sell_order)
+                            if transaction :
+                                transaction.commit()
+                                self.transactions[transaction.date] = transaction
+                                print("Order was successful security balance %d " % (max_qty - quantity))
+                                return
+                            else :
+                                raise TransactionError("Sell order failed")
                     
-                    else:
-                        sell_order.setStatus(OrderStatus.KILLED)
+                        else:
+                            sell_order.setStatus(OrderStatus.KILLED)
+                    else :
+                        print("Your ask price %s is greater than current trading price at %s" %
+                              (ask_price, self.queryPrice(symbol))
+                              )   
+                        raise TransactionError("Sell order failed")
                 else :
                     print("Order cannot be executed; you don't have enough stock")
                     return
