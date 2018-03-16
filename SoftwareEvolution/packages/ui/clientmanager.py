@@ -291,7 +291,7 @@ class ClientManager(Application):
         
         
     def _menu0(self):
-        #passes this method when called 
+        #Return to main
         pass
     
     

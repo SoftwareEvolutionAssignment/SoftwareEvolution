@@ -188,6 +188,7 @@ class TradingApplication(Application):
                         print("Your ask price %s is greater than current trading price at %s" %
                               (ask_price, self.queryPrice(symbol))
                               )   
+                        sell_order.setStatus(OrderStatus.KILLED)
                         raise TransactionError("Sell order failed")
                 else :
                     print("Order cannot be executed; you don't have enough stock")
@@ -200,53 +201,93 @@ class TradingApplication(Application):
             
                   
     def buy(self, client, symbol):
+        """Buys positions for symbols input by clients.
+        
+        if security symbol is available to purchase buy inputs the number of positions 
+        they would like and their ask price. if ask price is greater than or equal to 
+        current trading price the order is FULFILLED else the order is killed 
+        Arguments
+        ---------
+        client: client's id to identify which client is requesting to buy
+        symbol: which security symbol client wish to buy position
+        
+        Exceptions
+        ----------
+        @raise exception:
+            TypeError: user input invalid 
+            SymbolDoesNotExistError: Prints error if symbol does not exist
+        """
         if self.broker.checkSecurityBySymbol(symbol) :
             try:
                 quantity = int(self._promptForQuantity())
                 ask_price = float(self._promptForPrice())
-                buy_order = Order(int(client.getID()), symbol, TransType.BUY, quantity, ask_price)
-                #if statement to check if buy price is good
-                print("You asked to buy %d stocks of %s, which is now trading at %s" % 
+                if ask_price >= float(self.queryPrice(symbol)) :
+                    buy_order = Order(int(client.getID()), symbol, TransType.BUY, quantity, ask_price)
+                    print("You asked to buy %d stocks of %s, which is now trading at %s" % 
                                 (quantity, symbol, self.queryPrice(symbol))
                       )
-                response = input("Are you happy to submit your order [y/n]? ")
-                if re.search(r"^[Yy]", response):
+                    response = input("Are you happy to submit your order [y/n]? ")
+                    if re.search(r"^[Yy]", response):
                         transaction = self.broker.executeOrder(buy_order)
                         if transaction :
                             transaction.commit()
                             self.transactions[transaction.date] = transaction
+                            print("Order was successful security balance %d ")
+                            return
                         else :
                             raise TransactionError("Buy order failed")
-                else :
+                    else :
+                        buy_order.setStatus(OrderStatus.KILLED)
+                else:
+                    print("Your ask price %s is less than current trading price at %s" %
+                              (ask_price, self.queryPrice(symbol))
+                              ) 
                     buy_order.setStatus(OrderStatus.KILLED)
-                
+                    raise TransactionError("Buy order failed")
             except TypeError as ex :
                 print ("Exception: %s " %ex, file = sys.stderr)
-        
-        
         else :
             raise SymbolDoesNotExistError("Cannot find symbol")
     
     
     def queryPrice(self, symbol) :
-        #
-        # A function querying a security's price from Price Server
-        # An Data_Unavailable_Ex may be thrown
-        #
+        """A function querying a security's price from Price Server.
+        
+        Arguments
+        ---------
+        symbol: argument for security symbol price you want to query
+        
+        Return
+        ------
+        price of symbol 
+        
+        Note:
+        A Data_Unavailable_Ex may be thrown
+        """
         price = self.price_srvr.getLastRecordedPriceBySymbol(symbol.upper())
         return price
     
     
     def listAllTransactions(self):
+        """List transactions from self.transactions dictionary in key-value pairs.
+        
+        key: date
+        value : transaction object
+        """
         print("""
-Date & time of transaction  =>     Transaction Details
-===========================   =============================""")
+            Date & time of transaction  =>     Transaction Details
+            ===========================   =============================""")
         for date, transaction in self.transactions.items() :
             print(date, " => ", transaction)
     
     
     def listTransactionsPerClient(self, client):
+        """List transactions made by each client.
         
+        Arguments
+        ---------
+        client: identifies client user wants transactions for 
+        """
         response = input("Listing transactions for client %s? [y/n] " % client.getName() )
         if not re.search(r"^[Yy]", response):
             return
@@ -256,9 +297,19 @@ Date & time of transaction  =>     Transaction Details
                 print(transaction)
 
     
-    #Lists all transactions between two dates (inclusive); 
-    #pass two dates of equal value to list transactions on a particular date
     def listTransactionsInPeriod(self, from_date, to_date):
+        """List all transactions between two dates inclusive.
+        
+        user inputs two dates of equal value to list transactions on a particular date 
+        
+        Arguments
+        --------
+        from_date: enter date from which you would like to see transactions
+        to_date: enter last date that transaction processes should consider 
+        
+        Exception:
+        @raise exception: Whatever exception is caught is printed out to user 
+        """
         try :
             trns_in_dates = self._transactions_between(from_date, to_date)
             
@@ -278,6 +329,21 @@ Date & time of transaction  =>     Transaction Details
 #                 print(transaction)    
     
     def listTransactionsPerSecurity(self, symbol):
+        """List transactions per security symbol.
+        
+        symbol to view transaction is input by user and function first checks if symbol exist
+        if not a symbol not found error is raised. If it exist all transactions for that security
+        are listed.
+        
+        Arguments
+        ---------
+        symbol: user input symbol they will like to view transactions on
+        
+        Exceptions
+        ----------
+        @raise exception: 
+            SymbolDoesNotExistError : print a cannot find symbol error
+        """
         if not self.broker.checkSecurityBySymbol(symbol):
             raise SymbolDoesNotExistError("Cannot find symbol")
         
@@ -287,6 +353,17 @@ Date & time of transaction  =>     Transaction Details
                 print(transaction)
     
     def _menu(self):
+        """Menu option for trading application class
+        
+        Returns
+        -------
+        input menu option user has entered 
+        
+        Exception
+        ---------
+        @raise exception:
+            ValueError: Invalid user entry 
+        """
         print("""Client's Manager Menu
             Please choose an option: 
             1:    Buy securities.
@@ -305,12 +382,14 @@ Date & time of transaction  =>     Transaction Details
             return ""
         
         
-    def _menu0(self):       #Return to Main
+    def _menu0(self):       
+        #Return to Main
         pass
     
     
-    def _menu1(self):       #Buy
-        
+    def _menu1(self):       
+        #Menu option for buying security symbols
+        #Raises TransactionError or SymbolDoesNotExistError
         try:
             client_id = self._promptForID()
             client = ClientManager.getInstance().retrieveClient(client_id)
@@ -323,8 +402,9 @@ Date & time of transaction  =>     Transaction Details
         except (TransactionError, SymbolDoesNotExistError) as  ex :
             print("Exception: ", ex, ex.__doc__, file = sys.stderr)
     
-    def _menu2(self):       #Sell
-        
+    def _menu2(self):       
+        #Menu option for selling security symbols
+        #Raises TransactionError or SymbolDoesNotExistError
         try:
             client_id = self._promptForID()
             client = ClientManager.getInstance().retrieveClient(client_id)
@@ -341,15 +421,17 @@ Date & time of transaction  =>     Transaction Details
             print("Exception: ", ex, ex.__doc__, file = sys.stderr)
   
     
-    def _menu3(self):       #Query price
-        
+    def _menu3(self):      
+        #Menu option for query price
         symbol = self._promptForSymbol()      
         sec_price = self.queryPrice(symbol)
         
         print("Last recorded price for security %s is %s" %(symbol, sec_price))
         
     
-    def _menu4(self):   #List transactions for a client.
+    def _menu4(self):   
+        #List transactions for a client.
+        #Raises a ClientException error
         try:
             client_id = self._promptForID()
             client = ClientManager.getInstance().retrieveClient(client_id)
@@ -358,7 +440,8 @@ Date & time of transaction  =>     Transaction Details
         except ClientException as  ex :
             print("Exception: ", ex, ex.__doc__, file = sys.stderr)  
         
-    def _menu5(self):   #List transactions in date.
+    def _menu5(self):   
+        #List transactions in particular day.
         try:
             date_str = input("Enter transaction date using format: YYYY-MM-DD:")
             date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
@@ -366,8 +449,8 @@ Date & time of transaction  =>     Transaction Details
         except Exception as ex:
             print("Exception: ", ex, ex.__doc__, file = sys.stderr)  
     
-    def _menu6(self):   #List transactions in a period
-        
+    def _menu6(self):   
+        #List transactions in a periods of different dates 
         try:
             date_str = input("Enter first transaction date using format: YYYY-MM-DD:")
             from_date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
@@ -382,8 +465,8 @@ Date & time of transaction  =>     Transaction Details
         except Exception as ex:
             print("Exception: ", ex, ex.__doc__, file = sys.stderr)  
     
-    def _menu7(self):   #List transactions per security
-        
+    def _menu7(self):  
+        #List transactions per security
         try :
             symbol = self._promptForSymbol()
             self.listTransactionsPerSecurity(symbol)
@@ -391,22 +474,27 @@ Date & time of transaction  =>     Transaction Details
             print("Exception: ", ex, ex.__doc__, file = sys.stderr)  
         
     
-    def _menu8(self):       #List all transactions
+    def _menu8(self):      
+        #List all transactions
         self.listAllTransactions()
                               
-    def run(self):#right way for indentation of arguments
-            menu_items = [
-                            self._menu0, self._menu1, self._menu2, 
-                            self._menu3, self._menu4, self._menu5, 
-                            self._menu6, self._menu7, self._menu8
-                          ]
-            try:
-                choice = self._menu()
-                if choice in range(0,9) :
-                    menu_item = menu_items[choice]
-                    menu_item()
-                else :
-                    print ("Error: Undefined input ", file=sys.stderr)
+    def run(self):
+        """Run function is called to manage trading applications menu options.
+        
+        Based on user input a particular menu is called and its operations executed.
+        """
+        menu_items = [
+                        self._menu0, self._menu1, self._menu2, 
+                        self._menu3, self._menu4, self._menu5, 
+                        self._menu6, self._menu7, self._menu8
+                        ]
+        try:
+            choice = self._menu()
+            if choice in range(0,9) :
+                menu_item = menu_items[choice]
+                menu_item() #gets the option number passed inside the array
+            else :
+                print ("Error: Undefined input ", file=sys.stderr)
                     
-            except (ClientException, PositionException, DataUnavailableEx) as ex :
-                print("Exception: ", ex, file=sys.stderr)
+        except (ClientException, PositionException, DataUnavailableEx) as ex :
+            print("Exception: ", ex, file=sys.stderr)
