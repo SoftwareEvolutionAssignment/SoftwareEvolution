@@ -1,0 +1,22 @@
+#!/bin/sh
+
+#
+# Script name: run
+# Arguments:   3 file names for config_file clients_file transactions_file
+# Synopsis:    Script sets environment variables and invokes the system's
+#              main application menu, passing the three argument through
+#
+
+if [ $# -lt 3 ] 
+then
+	echo "Not enough arguments"
+	exit
+fi
+
+export PROJECT_BASE_DIR=`pwd`
+export PYTHONPATH=$PROJECT_BASE_DIR/packages:$PROJECT_BASE_DIR/tests
+
+echo; echo; echo
+
+python3 packages/ui/mainapp.py $*
+
