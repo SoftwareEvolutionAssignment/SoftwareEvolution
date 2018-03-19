@@ -21,10 +21,13 @@ import re
 from ui.abstractapp import Application
 from ui.clientmanager import ClientManager
 from ui.tradingappl import TradingApplication
+from ui.progArgumentsErr import ProgArgumentsErr
+
 from trades.client import ClientException
 from trades.PositionException import PositionException
+
 from server.dataunavailable import DataUnavailableEx
-from ui.progArgumentsErr import ProgArgumentsErr
+
 
 class MainMenu(Application) :
     """A class that displays the main menu.

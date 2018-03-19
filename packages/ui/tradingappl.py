@@ -288,7 +288,7 @@ class TradingApplication(Application):
         ---------
         client: identifies client user wants transactions for 
         """
-        response = input("Listing transactions for client %s? [y/n] " % client.getName() )
+        response = input("Lsting transactions for client %s? [y/n] " % client.getName() )
         if not re.search(r"^[Yy]", response):
             return
         
