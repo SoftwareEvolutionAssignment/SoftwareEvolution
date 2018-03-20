@@ -21,10 +21,12 @@ _promptForQuantity() : prompt user to enter quantity to sell or buy
 _promptForPrice() : prompt user for ask price 
 _promptForID() : prompt user to enter client's id 
 _promptForSymbol() : prompt user for security symbol
-      
+
 Created on 21 February 2018.
 
 @author: Adil Al-Yasiri.
+
+Updated on the 15th March , 2018 by Omotola Shogunle
 """
 from abc import ABC
 

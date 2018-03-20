@@ -13,6 +13,8 @@ run(): Manages operation based on what option menu user picks
 Created on 20 February 2018
 
 @author: Adil Al-Yasiri
+
+Updated on the 15th March , 2018 by Omotola Shogunle
 """
 
 import sys

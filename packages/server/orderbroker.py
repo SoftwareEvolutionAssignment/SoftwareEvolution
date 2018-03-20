@@ -1,4 +1,4 @@
-'''Module orderbroker.py
+"""Module orderbroker.py
 
 Class
 -----
@@ -7,19 +7,20 @@ A singleton class representing an order broker system
      
 Methods
 -------
-getInstance() : instatiates the singleton class
+getInstance() : instantiates the singleton class
 
 Functions
 ---------
 checkSecurityBySymbol() : checks the security symbol 
 getSecurityInfoBySymbol() : Returns a dictionary of security details containing "SYMBOL", "NAME", "SECTOR" and "INDUSTRY"
-executeOrder() : Creates transaction of type Transaction for a partiucalr order and returns it
+executeOrder() : Creates transaction of type Transaction for a particular order and returns it
       
-Created on 21 February 2018.
-@author: adil
-Updated 18 March 2018
+Created on 21 Nov 2017
+@author: Adil Al-Yasiri
+
+Updated on 16 March 2018
 @author: Norbert
-'''
+"""
 
 from trades.transaction import Transaction
 from ui.abstractapp import Application
@@ -28,17 +29,16 @@ from ui.abstractapp import Application
 
     
 class OrderBroker(object):
-    '''
-    A singleton class representing an order broker system
-    '''
+    """A singleton class representing an order broker system."""
 
     instance = None
     
 
     @staticmethod
     def getInstance():
-        """Creates and intailises an istance of the orderbroker class
-        and initailises the stocks_file_name field
+        """Creates and initialises an instance of the orderbroker class.
+        
+        also initialises the stocks_file_name field
         
         Returns
         -------
@@ -50,9 +50,7 @@ class OrderBroker(object):
         return OrderBroker.instance
     
     def __init__(self, stocks_file_name):
-        '''
-        Uses the (tab delimited) stocks file to retrieve securities details
-        '''
+        """Uses the (tab delimited) stocks file to retrieve securities details."""
         
         self.securities = {}
         
@@ -78,7 +76,7 @@ class OrderBroker(object):
         
         
     def executeOrder(self, order):
-        """ Creates transaction of type Transaction for a partiucalr order"""
+        """Creates transaction of type Transaction for a particular order"""
         transaction = Transaction(order) 
         
         return transaction

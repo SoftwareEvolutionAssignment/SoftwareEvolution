@@ -1,4 +1,4 @@
-'''Module server.price.py
+"""Module server.price.py
 
 Class
 -----
@@ -13,33 +13,30 @@ getTodaysAveragePriceBySymbol() : returns the average price of the security for 
 getTodaysVolumeBySymbol () : returns ADTV for a security
 
 Created on 27 Nov 2017
-@author: adil
+@author: Adil Al-Yasiri
 
-Updated 18 Feb 2018
-@author Norbert
-'''
+Updated on 16 March 2018
+@author: Norbert
+"""
+
 from datetime import datetime
-from server.Price_Unavailable_Ex import PriceUnavailableEx
+from server.price_Unavailable_Ex import PriceUnavailableEx
 from server.dataunavailable import DataUnavailableEx
 import sys
 import pprint
+from janitor.plugincore.exceptions import UnimplementedMethod
 
 class PriceServer():
-    '''
-    Class representing the pricing server used to get market data prices
-    '''
+    """Class representing the pricing server used to get market data prices."""
+    
     DATE_FORMAT = "%Y-%m-%d"
     DAY_SERIES_FUNCTION = 'TIME_SERIES_DAILY'
 
     def __init__(self, mkt_data_source):
-        '''
-        source represents the source of the market data "Yahoo" or "Alpha"
-        '''
+        """source represents the source of the market data "Yahoo" or "Alpha". """
         self.mkt_data_srvr = mkt_data_source
     
-    #---------------------------------------------------------
-    # Returns today's price; else raises a PriceUnavailableEx
-    #---------------------------------------------------------   
+    
     def getTodaySecurityPriceBySymbol(self, symbol):
         """
         Returns the average price of the security for the current day
@@ -80,13 +77,15 @@ class PriceServer():
         except DataUnavailableEx :
             print ("Exception in Price by Symbol!", file=sys.stderr)
             raise DataUnavailableEx("Price not found")
-    @unimplemented 
+        
+    @UnimplementedMethod
     def getTodaysAveragePriceBySymbol(self, symbol):       
         """
         returns the average price of the security for the current day
         """
         return ''
-    @unimplemeted
+    
+    @UnimplementedMethod
     def getTodaysVolumeBySymbol(self, symbol):      
         """
         Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time.

@@ -12,16 +12,12 @@ Functions
 getURL() : Returns the full URL for a particular security. 
 setFunction() : Sets the function variable. To define what time series it holds.
 
-
-""""
-
-'''
 Created on 25 Nov 2017
-@author: adil
+@author: Adil Al-Yasiri
 
 Updated on 16 March 2018
-@author: norbert
-'''
+@author: Norbert
+"""
 
 import re
 from pprint import pprint
@@ -31,11 +27,10 @@ from server.dataunavailable import DataUnavailableEx
 
 
 class Alphavantage(MarketDataServer):
-    '''
-    A module representing a the Alphavantage Server class
-    It builds the URL to point to Alphavantage domain.
-    The class inherits from MarketDataServer
-    '''
+    """A module representing a the Alphavantage Server class.
+    
+    It builds the URL to point to Alphavantage domain.The class inherits from MarketDataServer
+    """
 
 
     def __init__(self, config_fname):
@@ -43,16 +38,20 @@ class Alphavantage(MarketDataServer):
     
     
     def getURL (self):
-        """
-        Returns the full URL for a particular security. 
+        """Returns the full URL for a particular security. 
         
+        By collecting the time series e.g itraday,daily etc, security symbol, interval between two 
+        consecutive data points in time series, api key, and data type which the data is stored by default
+        which in json in this case.
         """
-        return self.path+"?function= "+self.function+ \ # time series e.g. intraday, daily, ...
-            "&symbol="+self.symbol+ \ #symbol of the sequirity
-            "&interval="+self.interval+ \ #interval between two consequiteve datapoints in time series
-            "&apikey="+self.apikey+ \ #api key
-            "&datatype="+self.datatype # data type in which the data are stored by default it's json
-    
+        
+        return self.path+"?function="+self.function+ \
+            "&symbol="+self.symbol+ \
+            "&interval="+self.interval+ \
+            "&apikey="+self.apikey+ \
+            "&datatype="+self.datatype
+            
+
     def setFunction(self, function):
         """
         Sets the function variable. To define what time series it holds.
@@ -60,7 +59,7 @@ class Alphavantage(MarketDataServer):
         Arguments
         --------- 
         function: 'string'
-            defition of the time series
+            definition of the time series
         """
         self.function = function     
         

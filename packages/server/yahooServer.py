@@ -11,11 +11,11 @@ getURL() : returns the URL of the yahoo server
 getLastRecordedDate() : Returns the last recorded date from the market data
 getPrices() : Returns the market data prices for a particular time series (interval) 
 
-Updated on 18 March 2018
-by Norbert
+Created on 18 Nov 2017
+@author: Adil Al-Yasiri
 
-Created on 25 Nov 2017
-@author: adil
+Updated on 16 March 2018
+@author: Norbert
 """
 from server.Server import MarketDataServer
 from janitor.plugincore.exceptions import UnimplementedMethod

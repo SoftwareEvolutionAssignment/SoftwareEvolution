@@ -24,6 +24,8 @@ run() : manages menu options and users input
 Created on 18 February 2018.
 
 @author: Adil Al-Yasiri
+
+Updated on the 15th March , 2018 by Omotola Shogunle
 """
 import sys
 import re

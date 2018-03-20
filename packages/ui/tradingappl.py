@@ -24,6 +24,11 @@ run(): manages menu options and user input
 Created on 20 February 2018
 
 @author: Adil Al-Yasiri
+
+Updated on 15 March 2018
+@author: Omotola Shogunle
+
+
 """
 
 
