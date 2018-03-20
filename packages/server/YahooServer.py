@@ -1,14 +1,14 @@
-'''server.YahooServer
+"""server.YahooServer
 Class
 ----- 
-A module representing a the Yahoo Server class - connector to yahoo fincance api 
+A module representing a the Yahoo Server class - connector to Yahoo finance api 
 ref: https://finance.yahoo.com/lookup?s=API
 It builds the URL to point to Yahoo domain.
    
-Methods
+Functions
 ---------
 getURL() : returns the URL of the yahoo server
-getLastRecordedDate() : Returns the last recorded date from the maret data
+getLastRecordedDate() : Returns the last recorded date from the market data
 getPrices() : Returns the market data prices for a particular time series (interval) 
 
 Updated on 18 March 2018
@@ -16,37 +16,35 @@ by Norbert
 
 Created on 25 Nov 2017
 @author: adil
-'''
+"""
 from server.Server import MarketDataServer
+from janitor.plugincore.exceptions import UnimplementedMethod
 
 class YahooServer(MarketDataServer):
-    '''
-    A module representing a the Yahoo Server class
+    """A module representing a the Yahoo Server class.
+    
     It builds the URL to point to Yahoo domain.
-    '''
+    """
 
     def __init__(self, config_fname):
-        """
-        Constructor inherited from its super class MarketDataServer
-        """
+        """Constructor inherited from its super class MarketDataServer."""
+        
         MarketDataServer.__init__(self, config_fname)
         
     def getURL (self):
-        """
-        Returns URL of the yahoo server with symbol and interval values
-        """
+        """Returns URL of the yahoo server with symbol and interval values."""
+        
         return self.path+self.symbol+"?interval="+self.interval
-    @uniplemented
+    
+    @UnimplementedMethod
     def getLastRecordedDate(self, market_data):
-        """
-        Returns the last recorded date from the maret data
-        """
+        """Returns the last recorded date from the market data."""
+        
         return ''
     
     def getPrices (self, market_data):
-        """
-        Returns the market data prices for a particular time series (interval) 
-        """
+        """Returns the market data prices for a particular time series (interval). """
+        
         mkt_data_fileds = market_data.keys()
         for field in mkt_data_fileds :
             if field.find('Time Series') :
