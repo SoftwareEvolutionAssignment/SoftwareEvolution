@@ -1,7 +1,22 @@
-'''
-Created on 27 Nov 2017
+'''Module server.price.py
 
+Class
+-----
+Class representing the pricing server used to get market data prices
+
+
+Functions
+---------
+getTodaySecurityPriceBySymbol() : returns today's security price by symbol
+getLastRecordedPriceBySymbol() : returns the last recorded price of the security
+getTodaysAveragePriceBySymbol() : returns the average price of the security for the current day
+getTodaysVolumeBySymbol () : returns ADTV for a security
+
+Created on 27 Nov 2017
 @author: adil
+
+Updated 18 Feb 2018
+@author Norbert
 '''
 from datetime import datetime
 from server.Price_Unavailable_Ex import PriceUnavailableEx
@@ -26,6 +41,13 @@ class PriceServer():
     # Returns today's price; else raises a PriceUnavailableEx
     #---------------------------------------------------------   
     def getTodaySecurityPriceBySymbol(self, symbol):
+        """
+        Returns the average price of the security for the current day
+        
+        Exceptions
+        ---------
+        @raise exception:PriceUnavailableEx error if no price found for a symbol
+        """
         self.mkt_data_srvr.setSymbol(symbol)
         self.mkt_data_srvr.setFunction(PriceServer.DAY_SERIES_FUNCTION) #function to get last 100 prices per date
         mkt_data = self.mkt_data_srvr.getDataAsJSON()
@@ -40,11 +62,14 @@ class PriceServer():
         except (DataUnavailableEx):
             print("No data is available")
     
-    #---------------------------------------------------------
-    # Returns security's price; of the last recorded price; 
-    # Useful if today's price does not exist
-    #--------------------------------------------------------- 
+
     def getLastRecordedPriceBySymbol(self, symbol):
+        """
+        Returns security's price of the last recorded price
+        Exceptions
+        ---------
+        @raise exception:DataUnavailable error if today's price does not exist
+        """
         self.mkt_data_srvr.setSymbol(symbol)
         self.mkt_data_srvr.setFunction(PriceServer.DAY_SERIES_FUNCTION) #function to get last 100 prices per date
         mkt_data = self.mkt_data_srvr.getDataAsJSON()
@@ -55,10 +80,16 @@ class PriceServer():
         except DataUnavailableEx :
             print ("Exception in Price by Symbol!", file=sys.stderr)
             raise DataUnavailableEx("Price not found")
-        
+    @unimplemented 
     def getTodaysAveragePriceBySymbol(self, symbol):       
+        """
+        returns the average price of the security for the current day
+        """
         return ''
-    
-    def getTodaysVolumeBySymbol(self, symbol):       
+    @unimplemeted
+    def getTodaysVolumeBySymbol(self, symbol):      
+        """
+        Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time.
+        """
         return ''
     

@@ -1,7 +1,24 @@
-'''
-Created on 20 Feb 2018
+'''Module orderbroker.py
 
+Class
+-----
+A singleton class representing an order broker system
+
+     
+Methods
+-------
+getInstance() : instatiates the singleton class
+
+Functions
+---------
+checkSecurityBySymbol() : checks the security symbol 
+getSecurityInfoBySymbol() : Returns a dictionary of security details containing "SYMBOL", "NAME", "SECTOR" and "INDUSTRY"
+executeOrder() : Creates transaction of type Transaction for a partiucalr order and returns it
+      
+Created on 21 February 2018.
 @author: adil
+Updated 18 March 2018
+@author: Norbert
 '''
 
 from trades.transaction import Transaction
@@ -20,6 +37,13 @@ class OrderBroker(object):
 
     @staticmethod
     def getInstance():
+        """Creates and intailises an istance of the orderbroker class
+        and initailises the stocks_file_name field
+        
+        Returns
+        -------
+        Orderbroker instance
+        """
         if not OrderBroker.instance :
             stocks_file_name = Application.getCompaniesFileName()
             OrderBroker.instance = OrderBroker(stocks_file_name)
@@ -42,7 +66,7 @@ class OrderBroker(object):
     
     
     def checkSecurityBySymbol(self, symbol):
-        """Returns true f symbol exists"""
+        """Returns true if symbol exists"""
         
         return True if symbol in self.securities else False
     
@@ -54,6 +78,7 @@ class OrderBroker(object):
         
         
     def executeOrder(self, order):
+        """ Creates transaction of type Transaction for a partiucalr order"""
         transaction = Transaction(order) 
         
         return transaction
