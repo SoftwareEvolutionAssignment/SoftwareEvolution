@@ -4,7 +4,6 @@ Created on 25 Nov 2017
 @author: adil
 '''
 import sys
-from test.test_deque import fail
 sys.path.append("../packages")
 
 from server.YahooServer import YahooServer
@@ -14,13 +13,12 @@ from server.Price_Unavailable_Ex import PriceUnavailableEx
 
 from trades.client import Client
 from trades.position import Position
-from trades.PositionException import PositionException
+from trades.PositionException import PositionException  # @UnusedImport
 
 import datetime
 
 import unittest
 import re
-from re import  RegexFlag
 import ServerMock
 
 class MarketDataTest(unittest.TestCase):
@@ -30,8 +28,8 @@ class MarketDataTest(unittest.TestCase):
         mock = ServerMock.MockAlphaServer()
         self.price_server=PriceServer(mock)
         
-        self.json_regex=re.compile(r"^\{.*\}$", RegexFlag.DOTALL)
-        self.url_regex=re.compile(r"https://.*/.*?", RegexFlag.DOTALL)
+        self.json_regex=re.compile(r"^\{.*\}$", re.DOTALL)
+        self.url_regex=re.compile(r"https://.*/.*?", re.DOTALL)
         
         self.client = Client(1, "Adil", "a.al-yasiri@salford.ac.uk")
     def test_connect_to_Yahoo_server(self):
