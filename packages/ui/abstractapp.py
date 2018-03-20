@@ -26,7 +26,8 @@ Created on 21 February 2018.
 
 @author: Adil Al-Yasiri.
 
-Updated on the 15th March , 2018 by Omotola Shogunle
+Updated on 15 March 2018
+@author: Omotola Shogunle
 """
 from abc import ABC
 

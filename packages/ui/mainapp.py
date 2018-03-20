@@ -14,7 +14,8 @@ Created on 20 February 2018
 
 @author: Adil Al-Yasiri
 
-Updated on the 15th March , 2018 by Omotola Shogunle
+Updated on 16 March 2018
+@author: Omotola Shogunle
 """
 
 import sys

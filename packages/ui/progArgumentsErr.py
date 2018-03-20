@@ -8,7 +8,8 @@ Created on 15 Mar 2018
 
 @author: Adil Al-Yasiri
 
-Updated on the 15th March , 2018 by Omotola Shogunle
+Updated on 15 March 2018
+@author: Omotola Shogunle
 """
 
 class ProgArgumentsErr(Exception):
