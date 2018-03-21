@@ -1,8 +1,18 @@
-'''
+"""
+Module trades.order.
+
+Class
+-----
+OrderStatus : Represents a client holding a position as well as all details associated with said client.
+
 Created on 30 Nov 2017
 
-@author: adil
-'''
+@author: Adil Al-Yasiri
+
+Updated on 20 March 2018
+
+@author: Ibrahim Masembe
+"""
 import enum
 
 class OrderStatus(enum.IntEnum):
@@ -24,12 +34,12 @@ class TransType(enum.IntEnum):
 globals().update(TransType.__members__)
 
 class Order:
-    '''
-    A class representing a client order to be executed; 
+    """
+    A class representing a client order to be executed;
     when it is executed it will be turned into a transaction.
-    An order could be in one of statuses 
+    An order could be in one of statuses
     (open, submitted, fulfilled, partially fulfilled, or killed)
-    '''
+    """
 
 
     def __init__(self, client_id, symbol, trans_type, quantity, ask_price):

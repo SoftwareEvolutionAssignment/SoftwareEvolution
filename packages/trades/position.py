@@ -7,7 +7,7 @@ from datetime import datetime
 
 class Position:
     '''
-    A class representing the position a particular client has on a particular security
+    A class representing the position a particular client has on a particular security.
     '''
     
     DATE_FORMAT = '%Y/%m/%d'

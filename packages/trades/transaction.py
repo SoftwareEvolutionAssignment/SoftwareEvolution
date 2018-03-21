@@ -12,7 +12,7 @@ from trades.position import Position
 
 class TransactionError(Exception):
     """
-    Transaction Error; buy or sell order cannot be completed
+    Transaction Error; buy or sell order cannot be completed.
     """
 
 

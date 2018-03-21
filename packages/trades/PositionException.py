@@ -7,6 +7,6 @@ Created on 1 Dec 2017
 
 class PositionException(Exception):
     """
-    Security position error
+    Security position error.
     """
     pass
