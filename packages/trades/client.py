@@ -101,13 +101,22 @@ class Client:
             self.positions[position.getSymbol()] = position
 
     def getPosition(self, symbol):
+        """
+                Returns:
+                position: type list
+                    Returns positions owned by the client
 
+                Exception
+                ---------
+                @return: PositionException exception if the client doesn't hold the position
+                """
         if self.hasPosition(symbol):
             return self.positions[symbol]
         else:
             raise PositionException("Client does not hold position on this security")
 
     def hasPosition(self, symbol):
+        # checks if a symbol exists in the client's positions
         return True if symbol in self.positions else False
 
     def updatePositions(self, transacton):
