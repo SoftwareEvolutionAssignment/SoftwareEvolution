@@ -38,6 +38,7 @@ class Position:
     
     def getCurrentValue(self):
         pass
+
     #where to edit print out
     def __str__(self):
         return "%s|%d|%s|%s" % (self.symbol, self.quantity, 

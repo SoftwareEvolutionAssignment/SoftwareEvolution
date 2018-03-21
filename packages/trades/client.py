@@ -1,72 +1,123 @@
-'''
+"""Module trades.client.
+Class
+-----
+Client : Represents a client holding a position as well as all details associated with said client.
+ClientException : Subclass of class Exception
+
+Methods
+-------
+setName() : sets name of the client
+get_name() : returns name of the client
+setEmail() : sets the email of the client
+getID() : returns the identification number of the client
+getPositions() : returns a list of positions currently owned by the client
+
+Functions
+---------
+__init__() : Constructor for the Client
+addPosition() : Adds a position to a client's account
+getPosition() : Returns the position if a client owns said position
+updatePosition() :
+__str__() : Representation of the client instance in form of name,id , email and positions held by the client
+
+
 Created on 30 Nov 2017
 
-@author: adil
-'''
+@author: Adil Al-Yasiri
+
+Updated on 20 March 2018
+
+@author: Ibrahim Masembe
+"""
+
 __all__ = ["Client", "ClientException"]
 from trades.PositionException import PositionException
 
-class ClientException (Exception) :
+
+class ClientException(Exception):
     """Client Error"""
 
 
 class Client:
-    '''
-    A class representing a client holding a position
-    '''
+    """
+    A class representing a client holding a position with their details and positions on different assets.
+    """
+
+    def __init__(self, clientID, name, email):
+        """
+        Constructor for the client class
+
+         Arguments
+        ---------
+        name: type
+            Creates the name of the client
+        email: type string
+            Creates the email belonging to the client
+        client_id: type integer
+            Used to identify the client
+        positions: type list
 
 
-    def __init__(self, clientID, name, email) :
-        '''
-        Constructor
-        '''
-        self.name=name
-        self.email=email
-        self.clientID=clientID
-        self.positions={}
-    
-    def getName(self) :
-        return self.name
-    
-    def getID(self):
-        return self.clientID
-    
-    def getPositions(self):
-        return list(self.positions.values())
-    
-    def setName(self, name) :
+        Exception
+        ---------
+        @raise exception: PositionException Error if client does not hold a position on the property.
+        """
         self.name = name
-        
-    def setEmail(self, email) :
         self.email = email
-        
+        self.clientID = clientID
+        self.positions = {}
 
-    def addPosition(self, position) :
-        if self.hasPosition(position.getSymbol()) :
+    def get_name(self):
+        """Returns the name of the client."""
+        return self.name
+
+    def getID(self):
+        """Returns the iD of the client."""
+        return self.clientID
+
+    def getPositions(self):
+        """Returns the positions owned by the client."""
+        return list(self.positions.values())
+
+    def setName(self, name):
+        """Changes the name of the client."""
+        self.name = name
+
+    def setEmail(self, email):
+        """Changes the email of the client."""
+        self.email = email
+
+    def addPosition(self, position):
+        """Adds positions to the clients account."""
+
+        if self.hasPosition(position.getSymbol()):
             currentPosition = self.positions[position.getSymbol()]
+            # increases the amount owned by the client
             currentPosition.quantity += position.getQuantity()
+            # updates the date from last change
             currentPosition.setLastModificationDate(position.getLastModificationDate())
-        else :
+        else:
+            # adds the position to the client account
             self.positions[position.getSymbol()] = position
-            
-    def getPosition(self, symbol) :
-        if self.hasPosition(symbol) :
+
+    def getPosition(self, symbol):
+
+        if self.hasPosition(symbol):
             return self.positions[symbol]
-        else :
+        else:
             raise PositionException("Client does not hold position on this security")
-        
-    def hasPosition(self, symbol) :
+
+    def hasPosition(self, symbol):
         return True if symbol in self.positions else False
-    
-        
+
     def updatePositions(self, transacton):
         pass
-        
+
     def __repr__(self):
         return str(self.__dict__)
-    #edit format for print out
+
+    # edit format for print out
     def __str__(self):
-        positions = [ str(position) for position in self.positions.values() ]
-        
-        return "%d:%s:%s:%s" % (self.clientID, self.name, self.email, ",".join(positions)) 
-    
+        positions = [str(position) for position in self.positions.values()]
+
+        return "%d:%s:%s:%s" % (self.clientID, self.name, self.email, ",".join(positions))

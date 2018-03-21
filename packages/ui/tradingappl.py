@@ -292,7 +292,7 @@ class TradingApplication(Application):
         ---------
         client: identifies client user wants transactions for 
         """
-        response = input("Lsting transactions for client %s? [y/n] " % client.getName() )
+        response = input("Lsting transactions for client %s? [y/n] " % client.get_name())
         if not re.search(r"^[Yy]", response):
             return
         
@@ -398,7 +398,7 @@ class TradingApplication(Application):
             client_id = self._promptForID()
             client = ClientManager.getInstance().retrieveClient(client_id)
             print("Hello %s, you asked to buy some stocks." % 
-                    client.getName()
+                    client.get_name()
                   )
             symbol = self._promptForSymbol()
             self.buy(client, symbol) 
@@ -412,7 +412,7 @@ class TradingApplication(Application):
         try:
             client_id = self._promptForID()
             client = ClientManager.getInstance().retrieveClient(client_id)
-            print("Hello %s, you asked to sell some stocks." % client.getName())
+            print("Hello %s, you asked to sell some stocks." % client.get_name())
             
             symbol = self._promptForSymbol()
             

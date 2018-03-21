@@ -177,7 +177,7 @@ Date & time of transaction  =>     Transaction Details
     
     def listTransactionsPerClient(self, client):
         
-        response = input("Listing transactions for client %s? [y/n] " % client.getName() )
+        response = input("Listing transactions for client %s? [y/n] " % client.get_name() )
         if not re.search(r"^[Yy]", response):
             return
         
@@ -245,7 +245,7 @@ Date & time of transaction  =>     Transaction Details
             client_id = self._promptForID()
             client = ClientManager.getInstance().retrieveClient(client_id)
             print("Hello %s, you asked to buy some stocks." % 
-                    client.getName()
+                    client.get_name()
                   )
             symbol = self._promptForSymbol()
             self.buy(client, symbol) 
@@ -258,7 +258,7 @@ Date & time of transaction  =>     Transaction Details
         try:
             client_id = self._promptForID()
             client = ClientManager.getInstance().retrieveClient(client_id)
-            print("Hello %s, you asked to sell some stocks." % client.getName())
+            print("Hello %s, you asked to sell some stocks." % client.get_name())
             
             symbol = self._promptForSymbol()
             

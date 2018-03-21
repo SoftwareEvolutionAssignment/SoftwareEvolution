@@ -252,9 +252,9 @@ class ClientManager(Application):
         client = self.retrieveClient(client_id)
         positions = client.getPositions()
         if not positions :
-            print ("Client %s holds no positions!" % client.getName())
+            print ("Client %s holds no positions!" % client.get_name())
         else :
-            print ("Client %s holds the following positions:" % client.getName())
+            print ("Client %s holds the following positions:" % client.get_name())
             for position in positions :
                 print ("%d stocks of %s" % (position.getQuantity(), position.getSymbol()))
                 
@@ -306,7 +306,7 @@ class ClientManager(Application):
         #removes clients from database
         client_id = self._promptForID()
         removed_client = self.removeClient(client_id)
-        print ("The client %s has been removed from the database." % removed_client.getName())
+        print ("The client %s has been removed from the database." % removed_client.get_name())
 
     
     def _menu4(self):

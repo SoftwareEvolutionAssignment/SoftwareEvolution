@@ -70,7 +70,7 @@ class MarketDataTest(unittest.TestCase):
     #@unittest.expectedFailure
     def test_create_client(self):
         client = Client(1, "Adil", "a.al-yasiri@salford.ac.uk")
-        self.assertEqual("Adil", client.getName(), "Clent created successfully")
+        self.assertEqual("Adil", client.get_name(), "Clent created successfully")
     
     #@unittest.skip("skipping adding a position")
     #@unittest.expectedFailure
