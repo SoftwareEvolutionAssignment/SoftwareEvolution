@@ -1,5 +1,4 @@
-"""
-Module trades.order.
+"""Module trades.order.
 
 Class
 -----
@@ -30,6 +29,12 @@ import enum
 
 
 class OrderStatus(enum.IntEnum):
+    """Class that holds the enumerated types of order status.
+    
+    Arguments
+    ---------
+    enum.IntEnum: enumerated type of integer 
+    """
     OPEN = 0
     SUBMITTED = 1
     FULFILLED = 2
@@ -46,6 +51,14 @@ globals().update(OrderStatus.__members__)
 
 
 class TransType(enum.IntEnum):
+    """Class that holds the enumerated types of transactions.
+    
+    in this case to BUY=0 and SELL = 1
+    
+    Arguments
+    ---------
+    enum.IntEnum: enumerated type of integer 
+    """
     BUY = 0
     SELL = 1
 
@@ -54,16 +67,15 @@ globals().update(TransType.__members__)
 
 
 class Order:
-    """
-    A class representing a client order to be executed;
+    """A class representing a client order to be executed.
+    
     when it is executed it will be turned into a transaction.
     An order could be in one of statuses
     (open, submitted, fulfilled, partially fulfilled, or killed)
     """
 
     def __init__(self, client_id, symbol, trans_type, quantity, ask_price):
-        """
-        Constructor
+        """Constructor.
 
         Arguments
         ---------
