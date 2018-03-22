@@ -17,7 +17,7 @@ get_date() : Gets the date when the transaction took place.
 set_symbol() : Selects the company for the transaction.
 set_trans_type() : Selects the transaction type.
 set_price() : Sets the price for the transaction
-set_date() : Sets the date when the transaction took place.
+set_date() : Sets the date when the transaction took place
 
 
 Functions

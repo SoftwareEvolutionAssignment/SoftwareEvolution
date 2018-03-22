@@ -16,7 +16,7 @@ getCurrentValue() : returns the value of the shares
 Functions
 ----------
 __init__() : Constructor for the Position
-__str__() : Representation of the position with symbol , quantity , acquisition date and last modification date.
+__str__() : Representation of the position with symbol , quantity , acquisition date and last modification date
 
 Created on 30 Nov 2017
 
