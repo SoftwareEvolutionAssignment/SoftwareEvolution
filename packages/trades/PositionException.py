@@ -1,7 +1,14 @@
 """
+Class
+-----
+PositionException: Raises error for non existing positions
 Created on 1 Dec 2017
 
-@author: adil
+@author: Adil Al-Yasiri
+
+Updated on 20 March 2018
+
+@author: Ibrahim Masembe
 """
 
 

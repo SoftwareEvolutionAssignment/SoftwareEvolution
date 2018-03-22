@@ -1,14 +1,14 @@
-'''
+"""
 Created on 30 Nov 2017
 
-@author: adil
-'''
+@author: Adil Al-Yasiri
+"""
 from datetime import datetime
 
 class Position:
-    '''
+    """
     A class representing the position a particular client has on a particular security.
-    '''
+    """
     
     DATE_FORMAT = '%Y/%m/%d'
 

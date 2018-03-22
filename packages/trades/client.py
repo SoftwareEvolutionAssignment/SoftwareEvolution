@@ -17,7 +17,6 @@ Functions
 __init__() : Constructor for the Client
 addPosition() : Adds a position to a client's account
 getPosition() : Returns the position if a client owns said position
-updatePosition() :
 __str__() : Representation of the client instance in form of name,id , email and positions held by the client.
 
 

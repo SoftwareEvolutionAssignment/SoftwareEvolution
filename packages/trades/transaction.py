@@ -1,7 +1,19 @@
-"""
+"""Module trades.transaction.
+Class
+-----
+Transaction : Simulates a transaction which is the buying and selling of orders
+TransactionError : Subclass of class Exception
+
+Methods
+-------
+
 Created on 30 Nov 2017
 
-@author: adil
+@author: Adil Al-Yasiri
+
+Updated on 20 March 2018
+
+@author: Ibrahim Masembe
 """
 from datetime import datetime
 
@@ -17,15 +29,15 @@ class TransactionError(Exception):
 
 
 class Transaction:
-    '''
+    """
     classdocs
-    '''
+    """
     DATE_FORMAT = '%Y-%m-%d %H:%M:%S.%f'  # 2018-02-22 15:17:24.617547
 
     def __init__(self, order=""):
-        '''
+        """
         Constructor
-        '''
+        """
         if order == "":
             return
 
