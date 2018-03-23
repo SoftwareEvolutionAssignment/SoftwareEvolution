@@ -79,7 +79,7 @@ class Position:
 
     # where to edit print out
     def __str__(self):
-        # the format in which a position is printed in
+        # the format in which a position is printed in.
         return "%s|%d|%s|%s" % (self.symbol, self.quantity,
                                 datetime.strftime(self.acquisitionDate, Position.DATE_FORMAT),
                                 datetime.strftime(self.lastModificationDate, Position.DATE_FORMAT))
