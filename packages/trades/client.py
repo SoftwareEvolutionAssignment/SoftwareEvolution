@@ -101,21 +101,30 @@ class Client:
 
     def getPosition(self, symbol):
         """
-                Returns:
-                position: type list
-                    Returns positions owned by the client
+        Returns:
+        position: type list
+            Returns positions owned by the client
 
-                Exception
-                ---------
-                @return: PositionException exception if the client doesn't hold the position
-                """
+        Exception
+        ---------
+        @return: PositionException exception if the client doesn't hold the position
+        """
         if self.hasPosition(symbol):
             return self.positions[symbol]
         else:
             raise PositionException("Client does not hold position on this security")
 
     def hasPosition(self, symbol):
-        # checks if a symbol exists in the client's positions
+        """Checks if a symbol exists in the client's positions.
+        
+        Arguments
+        ---------
+        symbol: of type string
+        
+        Returns
+        -------
+        boolean if client has positions in symbol 
+        """
         return True if symbol in self.positions else False
 
     def updatePositions(self, transacton):
@@ -124,8 +133,8 @@ class Client:
     def __repr__(self):
         return str(self.__dict__)
 
-    # edit format for print out
     def __str__(self):
+        # edit format for print out
         positions = [str(position) for position in self.positions.values()]
 
         return "%d:%s:%s:%s" % (self.clientID, self.name, self.email, ",".join(positions))
