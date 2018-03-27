@@ -1,15 +1,35 @@
-'''
-Created on 27 Nov 2017
+"""
+Class
+-----
+MockAlphaServer class for feeding marker_data_test some date during testing.
 
-@author: adil
-'''
+Functions
+---------
+
+getUrl(): returns mock data url
+getDataAsJson(): returns mock1 data in JSON format
+
+Created on 27 November 2017
+
+@author: Adil Al-Yasiri
+
+Updated on 27 March 2018
+
+@author: Omotola Shogunle 
+"""
 from server.Server import MarketDataServer
 from server.alphavantage import Alphavantage
 
 class MockAlphaServer(Alphavantage):
-    '''
-    classdocs
-    '''
+    """A mock alpha server that stores data in dictionaries.
+    
+    This mock data is used to test market data in the market data test class 
+    The data is stored in two dictionaries one that have prices for every minute and the amount of positions
+    and another that has prices for everyday.
+    
+    Key: MetaData
+         TimeSeries
+    """
 
     mock_data = {
                 'Meta Data': {
@@ -570,14 +590,16 @@ class MockAlphaServer(Alphavantage):
 
     
     def __init__(self):
-        '''
+        """
         Constructor
-        '''
+        """
         MarketDataServer.__init__(self, r'../alpha.conf')
     
     def getURL (self):
+        """returns url for mockdata."""
         return "http://mock_data_serve/"
     
     def getDataAsJSON(self):
+        """returns dictionary mock1 in JSON format"""
         return MockAlphaServer.mock1
     

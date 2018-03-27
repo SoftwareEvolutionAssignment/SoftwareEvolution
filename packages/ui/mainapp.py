@@ -27,7 +27,7 @@ from ui.tradingappl import TradingApplication
 from ui.progArgumentsErr import ProgArgumentsErr
 
 from trades.client import ClientException
-from trades.PositionException import PositionException
+from trades.positionException import PositionException
 
 from server.dataunavailable import DataUnavailableEx
 

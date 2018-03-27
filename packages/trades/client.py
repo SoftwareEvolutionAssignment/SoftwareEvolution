@@ -30,7 +30,7 @@ Updated on 20 March 2018
 """
 
 __all__ = ["Client", "ClientException"]
-from trades.PositionException import PositionException
+from trades.positionException import PositionException
 
 
 class ClientException(Exception):

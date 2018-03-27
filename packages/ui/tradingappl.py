@@ -49,7 +49,7 @@ from server.orderbroker import OrderBroker
 from trades.transaction import Transaction, TransactionError
 from trades.order import Order, OrderStatus
 from trades.order import TransType
-from trades.PositionException import PositionException
+from trades.positionException import PositionException
 from trades.client import ClientException
 
 class TradingApplication(Application):

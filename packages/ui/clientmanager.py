@@ -40,7 +40,7 @@ from server.dataunavailable import DataUnavailableEx
 
 from trades.client import Client
 from trades.position import Position
-from trades.PositionException import PositionException
+from trades.positionException import PositionException
 from trades.client import ClientException
 
 
