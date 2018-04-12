@@ -52,7 +52,7 @@ class OrderBroker(object):
     def __init__(self, stocks_file_name):
         """Uses the (tab delimited) stocks file to retrieve securities details."""
         
-        self.securities = {}
+        self.securities = {} 
         
         with open(stocks_file_name, "r") as securities_file :
             #First read the line containing the header

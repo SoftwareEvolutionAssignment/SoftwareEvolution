@@ -32,7 +32,7 @@ Updated on 16 March 2018
 
 from abc import ABCMeta, abstractmethod
 
-import requests
+import requests #for using http requests
 import sys
 
 class MarketDataServer(metaclass=ABCMeta)  :

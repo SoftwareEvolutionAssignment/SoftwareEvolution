@@ -88,7 +88,7 @@ class PriceServer():
     @UnimplementedMethod
     def getTodaysVolumeBySymbol(self, symbol):      
         """
-        Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time.
+        Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time (day).
         """
         return ''
     
