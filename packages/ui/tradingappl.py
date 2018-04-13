@@ -192,8 +192,9 @@ class TradingApplication(Application):
                         print("Your ask price %s is greater than current trading price at %s" %
                               (ask_price, self.queryPrice(symbol))
                               )   
-                        sell_order.setStatus(OrderStatus.KILLED)
                         raise TransactionError("Sell order failed")
+                        sell_order.setStatus(OrderStatus.KILLED)
+                        
                 else :
                     print("Order cannot be executed; you don't have enough stock")
                     return
@@ -246,8 +247,8 @@ class TradingApplication(Application):
                     print("Your ask price %s is less than current trading price at %s" %
                               (ask_price, self.queryPrice(symbol))
                               ) 
-                    buy_order.setStatus(OrderStatus.KILLED)
                     raise TransactionError("Buy order failed")
+                    buy_order.setStatus(OrderStatus.KILLED)
             except TypeError as ex :
                 print ("Exception: %s " %ex, file = sys.stderr)
         else :
