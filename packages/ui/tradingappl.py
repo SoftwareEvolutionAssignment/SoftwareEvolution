@@ -14,7 +14,6 @@ _transactions_between(from_date, to_date):function called in listTransactionsInP
 saveTransactions(): save transactions to transaction file 
 sell(client, symbol): sell positions of security owned by client
 buy(client, symbol): buy positions of security for client
-queryPrice(symbol): ask current price of security symbol
 listAllTransactions(): list all transactions
 listTransactionsPerClient(client): list all transactions for clients
 listTransactionsInPeriod(from_date, to_date): list transactions between two dates 
@@ -25,7 +24,7 @@ Created on 20 February 2018
 
 @author: Adil Al-Yasiri
 
-Updated on 15 March 2018
+Updated on 15 April 2018
 @author: Omotola Shogunle
 
 """
@@ -51,6 +50,7 @@ from trades.order import Order, OrderStatus
 from trades.order import TransType
 from trades.positionException import PositionException
 from trades.client import ClientException
+
 
 class TradingApplication(Application):
     """Trading Application Class, a singleton for selling and buying securities.
@@ -104,9 +104,9 @@ class TradingApplication(Application):
                 line = line.rstrip()    #remove any trailing spaces 
                 
                 (trans_date, clt_id, tran_type, symbol, price, qty) = line.split("|")
-                transaction = Transaction() #class in module trades.transaction.py
+                transaction = Transaction() 
                 transaction.clientID = int(clt_id)
-                transaction.date = datetime.datetime.strptime(trans_date, Transaction.DATE_FORMAT)  #Convert to date object
+                transaction.date = datetime.datetime.strptime(trans_date, Transaction.DATE_FORMAT)
                 transaction.trans_type = TransType(int(tran_type))
                 transaction.symbol = symbol
                 transaction.price = float(price)
@@ -144,7 +144,7 @@ class TradingApplication(Application):
                 trans_file.write(str(self.transactions[trans_date]) + "\n")            
                 
                 
-    def sell(self, client, symbol):
+    def sell(self, client, security):
         """Sell positions to client based on what symbol client choose.
         
         if client has security with available positions to sell, client proposes an ask
@@ -153,8 +153,8 @@ class TradingApplication(Application):
         
         Arguments
         ---------
-        client: client's id to identify which client is requesting to sell
-        symbol: which security symbol already owned by client do they wish to sell positions
+        client: client class to identify which client is requesting to sell
+        symbol: security class already owned by client do they wish to sell positions
         
         Exceptions
         ----------
@@ -163,17 +163,17 @@ class TradingApplication(Application):
             TypeError: user input invalid 
             PositionException: client does not hold valid number of positions they are requesting to sell
         """
-        if self.broker.checkSecurityBySymbol(symbol) and client.hasPosition(symbol) :
+        if self.broker.checkSecurityBySymbol(security.getSymbol()) and client.hasPosition(security.getSymbol()) :
             try:
-                max_qty = client.getPosition(symbol).getQuantity()  
+                max_qty = client.getPosition(security.getSymbol()).getQuantity()  
                 print("You can sell a maximum of %d" % max_qty)
                 quantity = int(self._promptForQuantity())
                 if quantity <= max_qty : 
                     ask_price = float(self._promptForPrice())
-                    if ask_price <= float(self.queryPrice(symbol)) :
-                        sell_order = Order(int(client.getID()), symbol, TransType.SELL, quantity, ask_price)
+                    if ask_price <= float(security.getCurrentMarketValue()) :
+                        sell_order = Order(int(client.getID()), security.getSymbol(), TransType.SELL, quantity, ask_price)
                         print("You asked to sell %d stocks of %s, which is now trading at %s" % 
-                                    (quantity, symbol, self.queryPrice(symbol))
+                                    (quantity, security.getSymbol(), security.getCurrentMarketValue())
                           )
                         response = input("Are you happy to submit your order [y/n]? ")
                         if re.search(r"^[Yy]", response):
@@ -190,7 +190,7 @@ class TradingApplication(Application):
                             sell_order.setStatus(OrderStatus.KILLED)
                     else :
                         print("Your ask price %s is greater than current trading price at %s" %
-                              (ask_price, self.queryPrice(symbol))
+                              (ask_price, security.getCurrentMarketValue())
                               )   
                         raise TransactionError("Sell order failed")
                         sell_order.setStatus(OrderStatus.KILLED)
@@ -205,7 +205,7 @@ class TradingApplication(Application):
             raise PositionException("You do not hold position on this symbol")
             
                   
-    def buy(self, client, symbol):
+    def buy(self, client, security):
         """Buys positions for symbols input by clients.
         
         if security symbol is available to purchase buy inputs the number of positions 
@@ -213,8 +213,8 @@ class TradingApplication(Application):
         current trading price the order is FULFILLED else the order is killed 
         Arguments
         ---------
-        client: client's id to identify which client is requesting to buy
-        symbol: which security symbol client wish to buy position
+        client: client class to identify which client is requesting to buy
+        symbol: which security object symbol client wish to buy position
         
         Exceptions
         ----------
@@ -222,14 +222,15 @@ class TradingApplication(Application):
             TypeError: user input invalid 
             SymbolDoesNotExistError: Prints error if symbol does not exist
         """
-        if self.broker.checkSecurityBySymbol(symbol) :
+        if self.broker.checkSecurityBySymbol(security.getSymbol()) :
             try:
+                max_qty = client.getPosition(security.getSymbol()).getQuantity()
                 quantity = int(self._promptForQuantity())
                 ask_price = float(self._promptForPrice())
-                if ask_price >= float(self.queryPrice(symbol)) :
-                    buy_order = Order(int(client.getID()), symbol, TransType.BUY, quantity, ask_price)
+                if ask_price >= float(security.getCurrentMarketValue()) :
+                    buy_order = Order(int(client.getID()), security.getSymbol(), TransType.BUY, quantity, ask_price)
                     print("You asked to buy %d stocks of %s, which is now trading at %s" % 
-                                (quantity, symbol, self.queryPrice(symbol))
+                                (quantity, security.getSymbol(), security.getCurrentMarketValue())
                       )
                     response = input("Are you happy to submit your order [y/n]? ")
                     if re.search(r"^[Yy]", response):
@@ -237,7 +238,7 @@ class TradingApplication(Application):
                         if transaction :
                             transaction.commit()
                             self.transactions[transaction.date] = transaction
-                            print("Order was successful security balance %d ")
+                            print("Order was successful security balance %d " % (max_qty + quantity))
                             return
                         else :
                             raise TransactionError("Buy order failed")
@@ -245,7 +246,7 @@ class TradingApplication(Application):
                         buy_order.setStatus(OrderStatus.KILLED)
                 else:
                     print("Your ask price %s is less than current trading price at %s" %
-                              (ask_price, self.queryPrice(symbol))
+                              (ask_price, security.getCurrentMarketValue())
                               ) 
                     raise TransactionError("Buy order failed")
                     buy_order.setStatus(OrderStatus.KILLED)
@@ -255,23 +256,23 @@ class TradingApplication(Application):
             raise SymbolDoesNotExistError("Cannot find symbol")
     
     
-    def queryPrice(self, symbol) :
-        """A function querying a security's price from Price Server.
-        
-        Arguments
-        ---------
-        symbol: argument for security symbol price you want to query
-        
-        Return
-        ------
-        price of symbol 
-        
-        Note:
-        A Data_Unavailable_Ex may be thrown
-        """
-        price = self.price_srvr.getLastRecordedPriceBySymbol(symbol.upper())
-        return price
-    
+#     def queryPrice(self, symbol) :
+#         """A function querying a security's price from Price Server.
+#         
+#         Arguments
+#         ---------
+#         symbol: argument for security symbol price you want to query
+#         
+#         Return
+#         ------
+#         price of symbol 
+#         
+#         Note:
+#         A Data_Unavailable_Ex may be thrown
+#         """
+#         price = self.price_srvr.getLastRecordedPriceBySymbol(symbol.upper())
+#         return price
+#     
     
     def listAllTransactions(self):
         """List transactions from self.transactions dictionary in key-value pairs.
@@ -402,7 +403,9 @@ class TradingApplication(Application):
                     client.get_name()
                   )
             symbol = self._promptForSymbol()
-            self.buy(client, symbol) 
+            securitySymbol = self.broker.retrieveSecuritySymbol(symbol)
+            
+            self.buy(client, securitySymbol) 
             
         except (TransactionError, SymbolDoesNotExistError) as  ex :
             print("Exception: ", ex, ex.__doc__, file = sys.stderr)
@@ -416,9 +419,10 @@ class TradingApplication(Application):
             print("Hello %s, you asked to sell some stocks." % client.get_name())
             
             symbol = self._promptForSymbol()
+            securitySymbol = self.broker.retrieveSecuritySymbol(symbol)
             
-            if client.hasPosition(symbol) :
-                self.sell(client, symbol) 
+            if client.hasPosition(securitySymbol.getSymbol()) :
+                self.sell(client, securitySymbol) 
             else :
                 print ("You don't hold a position on %s, and we don't currently support sell short" % symbol)
             
@@ -429,9 +433,9 @@ class TradingApplication(Application):
     def _menu3(self):      
         #Menu option for query price
         symbol = self._promptForSymbol()      
-        sec_price = self.queryPrice(symbol)
+        sec_price = self.broker.retrieveSecuritySymbol(symbol)
         
-        print("Last recorded price for security %s is %s" %(symbol, sec_price))
+        print("Last recorded price for security %s is %s" %(symbol, sec_price.getCurrentMarketValue()))
         
     
     def _menu4(self):   

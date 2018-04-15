@@ -36,7 +36,7 @@ from server.price import PriceServer
 from server.alphavantage import Alphavantage
 from server.dataunavailable import DataUnavailableEx
 
-class Secuirty:
+class Security:
     
     def __init__ (self, symbol, name, sector, industry):
         self.symbol = symbol
@@ -46,8 +46,14 @@ class Secuirty:
         self.price_srvr = PriceServer(Alphavantage(Application.getConfigFileName()))
         
     def getCurrentMarketValue(self):
-        """
-        Returns a current vale of the security object on the market
+        """A function querying a security's price from Price Server.
+        
+        Return
+        ------
+        price of symbol 
+        
+        Note:
+        A Data_Unavailable_Ex may be thrown
         """
         price = self.price_srvr.getLastRecordedPriceBySymbol(self.symbol)
         return price
@@ -73,5 +79,5 @@ class Secuirty:
     def setSector(self, sector):
         self.sector=sector
         
-    def setSymbol(self, industry):
+    def setIndustry(self, industry):
         self.industry=industry

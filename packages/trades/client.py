@@ -29,7 +29,7 @@ Updated on 20 March 2018
 @author: Ibrahim Masembe
 """
 
-__all__ = ["Client", "ClientException"]
+__all__ = ["Client", "ClientException"]     #export the symbols 'Client' and 'ClientException'
 from trades.positionException import PositionException
 
 
@@ -75,7 +75,7 @@ class Client:
         return self.clientID
 
     def getPositions(self):
-        """Returns the positions owned by the client."""
+        """Returns the all positions owned by the client."""
         return list(self.positions.values())
 
     def setName(self, name):
@@ -103,7 +103,7 @@ class Client:
         """
         Returns:
         position: type list
-            Returns positions owned by the client
+            Returns specific position owned by the client from symbol input
 
         Exception
         ---------
