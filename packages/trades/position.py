@@ -77,9 +77,9 @@ class Position:
         """returns the value of the shares"""
         pass
 
-    # where to edit print out
+    
     def __str__(self):
         # the format in which a position is printed in.
-        return "%s|%d|%s|%s" % (self.symbol, self.quantity,
+        return "%s %9d %17s %25s %-45s" % (self.symbol, self.quantity,
                                 datetime.strftime(self.acquisitionDate, Position.DATE_FORMAT),
-                                datetime.strftime(self.lastModificationDate, Position.DATE_FORMAT))
+                                datetime.strftime(self.lastModificationDate, Position.DATE_FORMAT),'\n')

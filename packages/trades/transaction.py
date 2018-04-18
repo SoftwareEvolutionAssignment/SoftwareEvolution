@@ -86,6 +86,17 @@ class Transaction:
         self.__quantity = value
 
     def commit(self):
+        """Commits transaction made by client to client transactions.
+        
+        depending on if transaction type is a BUY or a SELL the transaction is committed 
+        accordingly 
+        
+        Exception
+        ---------
+            @raise exception: Transaction error raised in the case the user did not enter a buy or sell order.
+                            
+        
+        """
         client = ClientManager.getInstance().retrieveClient(str(self.clientID))
 
         # increases quantity of shares if buy option is selected
@@ -144,10 +155,11 @@ class Transaction:
     def __repr__(self):
         return str(self.__dict__)
 
-    # change output from here
+    
     def __str__(self):
         # returns a transaction as client id , transaction date,transaction type, symbol, quantity and price
-        return "%s|%d|%d|%s|%.4f|%d" % (
+        return "%s %5d %10d %15s %15.4f %10d" % (
+            
             self.date, self.clientID, self.trans_type, self.symbol, self.price, self.quantity)
 
         # ===========================================================================

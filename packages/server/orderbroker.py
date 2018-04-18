@@ -77,11 +77,11 @@ class OrderBroker(object):
         return True if symbol in self.securities else False
     
     
-#     def getSecurityInfoBySymbol(self, symbol):
-#         """Returns a dictionary of security details containing "SYMBOL", "NAME", "SECTOR" and "INDUSTRY" """
-#         
-#         return self.securities[symbol] if symbol in self.securities else None
-#     
+    def getSecurityInfoBySymbol(self, symbol):
+        """Returns a dictionary of security details containing "SYMBOL", "NAME", "SECTOR" and "INDUSTRY" """
+         
+        return self.securities[symbol] if symbol in self.securities else None
+     
     
     def retrieveSecuritySymbol(self, symbol):
         """Retrieves Security object from dictionary.

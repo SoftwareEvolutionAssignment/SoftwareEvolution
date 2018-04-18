@@ -134,7 +134,6 @@ class Client:
         return str(self.__dict__)
 
     def __str__(self):
-        # edit format for print out
         positions = [str(position) for position in self.positions.values()]
 
-        return "%d:%s:%s:%s" % (self.clientID, self.name, self.email, ",".join(positions))
+        return "%d %-15s %-25s %s" % (self.clientID, self.name, self.email, "".join(positions))

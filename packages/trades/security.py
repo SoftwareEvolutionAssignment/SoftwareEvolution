@@ -34,7 +34,7 @@ from ui.abstractapp import Application
 
 from server.price import PriceServer
 from server.alphavantage import Alphavantage
-from server.dataunavailable import DataUnavailableEx
+
 
 class Security:
     
@@ -81,3 +81,7 @@ class Security:
         
     def setIndustry(self, industry):
         self.industry=industry
+        
+    def __str__(self):
+        # the format in which security  is printed in.
+        return "%s %10s %s %21s %s %16s %s %52s" % ('\nSymbol:',self.symbol,'\nName:', self.name, '\nSector:',self.sector, '\nIndustry:',self.industry)

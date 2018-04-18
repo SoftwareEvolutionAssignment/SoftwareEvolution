@@ -146,6 +146,8 @@ class ClientManager(Application):
 
     def listClients(self):
         """List the clients stored in dictionary clients."""
+        print("""ID   name                 email            symbol      qty      aquisition_date         modification_date""",
+            '\n======================================================================================================================')
         for client in self.clients.values() :
             print(str(client))
             

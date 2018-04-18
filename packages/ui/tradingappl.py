@@ -255,24 +255,7 @@ class TradingApplication(Application):
         else :
             raise SymbolDoesNotExistError("Cannot find symbol")
     
-    
-#     def queryPrice(self, symbol) :
-#         """A function querying a security's price from Price Server.
-#         
-#         Arguments
-#         ---------
-#         symbol: argument for security symbol price you want to query
-#         
-#         Return
-#         ------
-#         price of symbol 
-#         
-#         Note:
-#         A Data_Unavailable_Ex may be thrown
-#         """
-#         price = self.price_srvr.getLastRecordedPriceBySymbol(symbol.upper())
-#         return price
-#     
+     
     
     def listAllTransactions(self):
         """List transactions from self.transactions dictionary in key-value pairs.
@@ -280,9 +263,9 @@ class TradingApplication(Application):
         key: date
         value : transaction object
         """
-        print("""
-            Date & time of transaction  =>     Transaction Details
-            ===========================   =============================""")
+    
+        print("""Date & time of transaction  =>     Transaction Details:    clientID     transType     symbol        price          qty""",
+            '\n======================================================================================================================')
         for date, transaction in self.transactions.items() :
             print(date, " => ", transaction)
     
@@ -294,10 +277,11 @@ class TradingApplication(Application):
         ---------
         client: identifies client user wants transactions for 
         """
-        response = input("Lsting transactions for client %s? [y/n] " % client.get_name())
+        response = input("Listing transactions for client %s? [y/n] " % client.get_name())
         if not re.search(r"^[Yy]", response):
             return
-        
+        print('Date/Time                  clientID     transType     symbol        price          qty',
+            '\n=======================================================================================')
         for transaction in self.transactions.values() :
             if transaction.get_client_id() == client.getID() :
                 print(transaction)
@@ -320,6 +304,8 @@ class TradingApplication(Application):
             trns_in_dates = self._transactions_between(from_date, to_date)
             
             if trns_in_dates :
+                print('Date/Time                  clientID     transType     symbol        price          qty',
+                      '\n=======================================================================================')
                 for  transaction in trns_in_dates :
                     print(transaction)
             else :
@@ -353,7 +339,11 @@ class TradingApplication(Application):
         if not self.broker.checkSecurityBySymbol(symbol):
             raise SymbolDoesNotExistError("Cannot find symbol")
         
-        print("Listing transactions for Security %s" % symbol )
+        
+        print("Listing transactions for Security %s" % str(self.broker.getSecurityInfoBySymbol(symbol)) )
+        #print("Listing transactions for Security %s" % symbol )
+        print('Date/Time                  clientID     transType     symbol        price          qty',
+            '\n=======================================================================================')
         for transaction in self.transactions.values() :
             if transaction.get_symbol() == symbol :
                 print(transaction)
@@ -507,3 +497,4 @@ class TradingApplication(Application):
                     
         except (ClientException, PositionException, DataUnavailableEx) as ex :
             print("Exception: ", ex, file=sys.stderr)
+           
