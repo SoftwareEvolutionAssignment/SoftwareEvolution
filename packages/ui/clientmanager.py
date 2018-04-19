@@ -169,8 +169,8 @@ class ClientManager(Application):
                 for positions in pos :
                     sym = positions.getSymbol()
                     qty = positions.getQuantity()
-                    aquisition_date = positions.getAcquisitionDate()
-                    mod_date = positions.getLastModificationDate()
+                    aquisition_date = str(positions.getAcquisitionDate())
+                    mod_date = str(positions.getLastModificationDate())
                     line  =''.join(str("%s|%s|%s|%s" % (sym,qty,aquisition_date, mod_date))+',')
                     fullLine+=line
                 clients_file.write(fullLine[:-1] + '\n')   
