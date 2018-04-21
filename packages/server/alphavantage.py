@@ -63,6 +63,9 @@ class Alphavantage(MarketDataServer):
         """
         self.function = function     
         
+    def setInterval(self, interval):
+        self.interval = interval
+        
     def getPrices (self, market_data):
         """
         Returns prices of securities on the market for a particular time series. 
@@ -82,6 +85,7 @@ class Alphavantage(MarketDataServer):
                 return market_data[key]
         else :
             raise DataUnavailableEx
+    
     
     def getLastRecordedDate(self, market_data):
         """

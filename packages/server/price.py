@@ -39,7 +39,7 @@ class PriceServer():
     
     def getTodaySecurityPriceBySymbol(self, symbol):
         """
-        Returns the average price of the security for the current day
+        returns today's security price by symbol
         
         Exceptions
         ---------
@@ -83,6 +83,15 @@ class PriceServer():
         """
         returns the average price of the security for the current day
         """
+        self.mkt_data_srvr.setSymbol(symbol)
+        #sets the function to intraday 
+        self.mkt_data_srvr.setSymbol(symbol).setFunction('TIME_SERIES_INTRADAY') 
+        #sets the interval to 60 minutes
+        self.mkt_data_srvr.setSymbol(symbol).setInterval('60min')
+        mkt_data = self.mkt_data_srvr.getDataAsJSON()
+        try:
+            prices = self.mkt_data_srvr.getPrices(mkt_data)
+            priceForLast
         return ''
     
     @UnimplementedMethod
