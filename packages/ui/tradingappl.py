@@ -141,7 +141,10 @@ class TradingApplication(Application):
         
         with open(self.transactions_file_name, "w") as trans_file :
             for trans_date in sorted(self.transactions.keys()) :
-                trans_file.write(str(self.transactions[trans_date]) + "\n")            
+                transactions = self.transactions[trans_date]
+                trans_file.write(str("%s|%d|%d|%s|%.4f|%d" % (transactions.get_date(), transactions.get_client_id(), 
+                                                      transactions.get_trans_type(), transactions.get_symbol(),
+                                                      transactions.get_price(),transactions.get_quantity())) + "\n")            
                 
                 
     def sell(self, client, security):

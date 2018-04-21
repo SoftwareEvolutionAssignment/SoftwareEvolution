@@ -34,14 +34,13 @@ from datetime import datetime
 
 from ui.abstractapp import Application
 
-from server.price import PriceServer
-from server.alphavantage import Alphavantage
 from server.dataunavailable import DataUnavailableEx
 
 from trades.client import Client
 from trades.position import Position
 from trades.positionException import PositionException
 from trades.client import ClientException
+
 
 
 
@@ -132,7 +131,7 @@ class ClientManager(Application):
         client_name = input ("Please enter the client's name: ")
         client_email = input ("Please enter the client's email address: ")
         
-        if re.match("[^0-9]", client_name) is not None:
+        if re.match("[0-9]", client_name) is not None:
             raise ClientException("Client name can only contain characters")
         if client_email.find("@") >= 0 :
             self.last_client_id += 1
@@ -156,12 +155,27 @@ class ClientManager(Application):
         
         first copy last id of client created then write it to file, after which all
         clients saved in dictionary self.clients are sorted by id number and written
-        to text file
+        to text file by calling the getters of the required attribute from the client 
+        and position class 
         """
+        
         with open(self.clients_file_name, "w") as clients_file :
             clients_file.write("%d\n" % self.last_client_id)
             for clt_id in sorted(self.clients.keys()) :
-                clients_file.write(str(self.clients[clt_id]) + "\n")
+                client = self.clients[clt_id]
+                pos = client.getPositions()
+                clients_file.write(str("%s:%s:%s:" % (client.getID(), client.get_name(), client.getEmail())))
+                fullLine=''
+                for positions in pos :
+                    sym = positions.getSymbol()
+                    qty = positions.getQuantity()
+                    aquisition_date = str(positions.getAcquisitionDate())
+                    mod_date = str(positions.getLastModificationDate())
+                    line  =''.join(str("%s|%s|%s|%s" % (sym,qty,aquisition_date, mod_date))+',')
+                    fullLine+=line
+                clients_file.write(fullLine[:-1] + '\n')   
+                 
+        
                 
     def retrieveClient(self, client_id):
         """Retrieves client based on input client's id.

@@ -77,6 +77,11 @@ class Client:
     def getPositions(self):
         """Returns the all positions owned by the client."""
         return list(self.positions.values())
+    
+    def getEmail(self):
+        """Return the email of the client."""
+        return self.email
+
 
     def setName(self, name):
         """Changes the name of the client."""

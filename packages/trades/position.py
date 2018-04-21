@@ -63,7 +63,7 @@ class Position:
 
     def getLastModificationDate(self):
         """returns the date shares were last acquired"""
-        return self.lastModificationDate
+        return datetime.strftime(self.lastModificationDate, Position.DATE_FORMAT)
 
     def setLastModificationDate(self, value):
         """sets the date from last acquisition"""
@@ -71,7 +71,7 @@ class Position:
 
     def getAcquisitionDate(self):
         """returns the date shares were first acquired"""
-        return self.acquisitionDate
+        return  datetime.strftime(self.acquisitionDate, Position.DATE_FORMAT)
 
     def getCurrentValue(self):
         """returns the value of the shares"""
