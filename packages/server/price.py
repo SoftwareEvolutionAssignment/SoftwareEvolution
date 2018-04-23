@@ -86,18 +86,44 @@ class PriceServer():
         self.mkt_data_srvr.setSymbol(symbol)
         #sets the function to intraday 
         self.mkt_data_srvr.setSymbol(symbol).setFunction('TIME_SERIES_INTRADAY') 
-        #sets the interval to 60 minutes
-        self.mkt_data_srvr.setSymbol(symbol).setInterval('60min')
+        #sets the interval to 15 minutes
+        self.mkt_data_srvr.setSymbol(symbol).setInterval('15min')
         mkt_data = self.mkt_data_srvr.getDataAsJSON()
+        all_prices = []
         try:
             prices = self.mkt_data_srvr.getPrices(mkt_data)
-            priceForLast
-        return ''
+            today = datetime.now().strftime (PriceServer.DATE_FORMAT)
+            if today in prices:
+                all_prices = prices[today]['4. close']       
+            else:
+                raise PriceUnavailableEx()
+        except (DataUnavailableEx):
+            print("No data is available")
+          
+        return sum(all_prices) / len(all_pirces)
     
     @UnimplementedMethod
     def getTodaysVolumeBySymbol(self, symbol):      
         """
         Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time (day).
         """
-        return ''
+        self.mkt_data_srvr.setSymbol(symbol)
+        #sets the function to intraday 
+        self.mkt_data_srvr.setSymbol(symbol).setFunction('TIME_SERIES_INTRADAY') 
+        #sets the interval to 15 minutes
+        self.mkt_data_srvr.setSymbol(symbol).setInterval('15min')
+        mkt_data = self.mkt_data_srvr.getDataAsJSON()
+        all_volume = []
+        try:
+            data = self.mkt_data_srvr.getPrices(mkt_data)
+            today = datetime.now().strftime (PriceServer.DATE_FORMAT)
+            if today in data:
+                all_volume = prices[today]['5. volume']       
+            else:
+                raise PriceUnavailableEx()
+        except (DataUnavailableEx):
+            print("No data is available")
+          
+        return sum(all_volume) 
+
     

@@ -373,6 +373,8 @@ class TradingApplication(Application):
             6:    List transactions in a two-dates period
             7:    List transactions in security
             8:    List all recorded transactions
+            9:    Query today's average security price
+            10:   Query today's security volume
             0:    Return to Main Menu
             """)
         try :
@@ -479,6 +481,20 @@ class TradingApplication(Application):
     def _menu8(self):      
         #List all transactions
         self.listAllTransactions()
+        
+    def _menu9(self):
+        #Menu option for query price
+        symbol = self._promptForSymbol()      
+        sec_price = self.broker.retrieveSecuritySymbol(symbol)
+        
+         print("Last recorded price for security %s is %s" %(symbol, sec_price.getAveragePriceForADay()))
+            
+    def _menu10(self):
+        #Menu option for query price
+        symbol = self._promptForSymbol()      
+        sec_price = self.broker.retrieveSecuritySymbol(symbol)
+        
+         print("Last recorded price for security %s is %s" %(symbol, sec_price.getAveragePriceForADay()))
                               
     def run(self):
         """Run function is called to manage trading applications menu options.
@@ -488,11 +504,12 @@ class TradingApplication(Application):
         menu_items = [
                         self._menu0, self._menu1, self._menu2, 
                         self._menu3, self._menu4, self._menu5, 
-                        self._menu6, self._menu7, self._menu8
+                        self._menu6, self._menu7, self._menu8,
+                        self._menu9, self._menu10
                         ]
         try:
             choice = self._menu()
-            if choice in range(0,9) :
+            if choice in range(0,11) :
                 menu_item = menu_items[choice]
                 menu_item() #gets the option number passed inside the array
             else :
