@@ -39,8 +39,7 @@ class PriceServer():
     
     
     def getTodaySecurityPriceBySymbol(self, symbol):
-        """
-        returns today's security price by symbol
+        """Returns today's security price by symbol.
         
         Exceptions
         ---------
@@ -62,8 +61,8 @@ class PriceServer():
     
 
     def getLastRecordedPriceBySymbol(self, symbol):
-        """
-        Returns security's price of the last recorded price
+        """Returns security's price of the last recorded price
+        
         Exceptions
         ---------
         @raise exception:DataUnavailable error if today's price does not exist
@@ -81,8 +80,16 @@ class PriceServer():
         
 
     def getTodaysAveragePriceBySymbol(self, symbol):       
-        """
-        returns the average price of the security for the current day
+        """Returns the average price of the security for the current day
+        
+        Arguments
+        -------
+        symbol: symbol of type string for example "GOOG" 
+        
+        Exception
+        ---------
+        @raise exception:
+            DataUnavailableError: If data for the specific symbol does not exist
         """
         self.mkt_data_srvr.setSymbol(symbol)
         #sets the function to intraday 
@@ -90,7 +97,6 @@ class PriceServer():
         #sets the interval to 15 minutes
         self.mkt_data_srvr.setInterval('15min')
         mkt_data = self.mkt_data_srvr.getDataAsJSON()
-        all_prices = []
         i = 0
         summ=0
         try:
@@ -98,10 +104,6 @@ class PriceServer():
             today = datetime.now().strftime (PriceServer.DATE_FORMAT)
             for key in prices.keys():
                 if key.startswith(today[:10]):
-#       debugging
-#                    print (i)
-#                    print (key)
-#                    print (prices[key]['4. close'])
                     i+=1
                     summ+=float(prices[key]['4. close'])
             
@@ -111,15 +113,21 @@ class PriceServer():
         
 
     def getTodaysVolumeBySymbol(self, symbol):      
-        """
-        Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time (day).
+        """Returns ADTV for a security.
+        
+        the amount of individual securities traded in a day on average over a specified period of time (day)
+        Arguments
+        -------
+        symbol: symbol of type string for example "GOOG" 
+        
+        Exception
+        ---------
+        @raise exception:
+            DataUnavailableEX: If data for symbol does not exist 
         """
         self.mkt_data_srvr.setSymbol(symbol)
         #sets the function to intraday 
-        
         self.mkt_data_srvr.setFunction(PriceServer.DAY_SERIES_FUNCTION2) 
-        
-        
         #sets the interval to 15 minutes
         self.mkt_data_srvr.setInterval('15min')
         mkt_data = self.mkt_data_srvr.getDataAsJSON()
@@ -130,10 +138,6 @@ class PriceServer():
             today = datetime.now().strftime (PriceServer.DATE_FORMAT)
             for key in prices.keys():
                 if key.startswith(today[:10]):
-#   debugging
-#                    print (i)
-#                    print (key)
-#                    print (prices[key]['5. volume'])
                     i+=1
                     all_volume+=float(prices[key]['5. volume'])
 
