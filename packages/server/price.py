@@ -86,6 +86,7 @@ class PriceServer():
         """
         self.mkt_data_srvr.setSymbol(symbol)
         #sets the function to intraday 
+<<<<<<< HEAD
         self.mkt_data_srvr.setFunction(PriceServer.DAY_SERIES_FUNCTION2) 
         #sets the interval to 15 minutes
         self.mkt_data_srvr.setInterval('15min')
@@ -110,12 +111,33 @@ class PriceServer():
         return round(summ/i, 4)
         
 
+=======
+        self.mkt_data_srvr.setSymbol(symbol).setFunction('TIME_SERIES_INTRADAY') 
+        #sets the interval to 15 minutes
+        self.mkt_data_srvr.setSymbol(symbol).setInterval('15min')
+        mkt_data = self.mkt_data_srvr.getDataAsJSON()
+        all_prices = []
+        try:
+            prices = self.mkt_data_srvr.getPrices(mkt_data)
+            today = datetime.now().strftime (PriceServer.DATE_FORMAT)
+            if today in prices:
+                all_prices = prices[today]['4. close']       
+            else:
+                raise PriceUnavailableEx()
+        except (DataUnavailableEx):
+            print("No data is available")
+          
+        return sum(all_prices) / len(all_pirces)
+    
+    @UnimplementedMethod
+>>>>>>> 06d355ae095117f8de11ec301ad875d6f77e6001
     def getTodaysVolumeBySymbol(self, symbol):      
         """
         Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time (day).
         """
         self.mkt_data_srvr.setSymbol(symbol)
         #sets the function to intraday 
+<<<<<<< HEAD
         
         self.mkt_data_srvr.setFunction(PriceServer.DAY_SERIES_FUNCTION2) 
         
@@ -141,5 +163,23 @@ class PriceServer():
             print("No data is available")
           
         return all_volume 
+=======
+        self.mkt_data_srvr.setSymbol(symbol).setFunction('TIME_SERIES_INTRADAY') 
+        #sets the interval to 15 minutes
+        self.mkt_data_srvr.setSymbol(symbol).setInterval('15min')
+        mkt_data = self.mkt_data_srvr.getDataAsJSON()
+        all_volume = []
+        try:
+            data = self.mkt_data_srvr.getPrices(mkt_data)
+            today = datetime.now().strftime (PriceServer.DATE_FORMAT)
+            if today in data:
+                all_volume = prices[today]['5. volume']       
+            else:
+                raise PriceUnavailableEx()
+        except (DataUnavailableEx):
+            print("No data is available")
+          
+        return sum(all_volume) 
+>>>>>>> 06d355ae095117f8de11ec301ad875d6f77e6001
 
     

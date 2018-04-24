@@ -61,11 +61,17 @@ class Security:
     def getAveragePriceForADay(self):
         averagePrice = self.price_srvr.getTodaysAveragePriceBySymbol(self.symbol)
         return averagePrice
+<<<<<<< HEAD
     
     def getTotalVolumeForADay(self):
         totalVolume = self.price_srvr.getTodaysVolumeBySymbol(self.symbol)
         return totalVolume
     
+=======
+    def getTotalVolumeForADay(self):
+        totalVolume = self.price_srvr.getTodaysVolumeBySymbol(self.symbol)
+        return totalVolume
+>>>>>>> 06d355ae095117f8de11ec301ad875d6f77e6001
     def getName(self):
         return self.name
     
