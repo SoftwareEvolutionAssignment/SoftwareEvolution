@@ -487,22 +487,14 @@ class TradingApplication(Application):
         symbol = self._promptForSymbol()      
         sec_price = self.broker.retrieveSecuritySymbol(symbol)
         
-<<<<<<< HEAD
         print("Today's average price of the %s is %s" %(symbol, sec_price.getAveragePriceForADay()))
-=======
-         print("Last recorded price for security %s is %s" %(symbol, sec_price.getAveragePriceForADay()))
->>>>>>> 06d355ae095117f8de11ec301ad875d6f77e6001
             
     def _menu10(self):
         #Menu option for query price
         symbol = self._promptForSymbol()      
         sec_price = self.broker.retrieveSecuritySymbol(symbol)
         
-<<<<<<< HEAD
         print("Today's total volume of the %s is %s" %(symbol, sec_price.getTotalVolumeForADay()))
-=======
-         print("Last recorded price for security %s is %s" %(symbol, sec_price.getAveragePriceForADay()))
->>>>>>> 06d355ae095117f8de11ec301ad875d6f77e6001
                               
     def run(self):
         """Run function is called to manage trading applications menu options.
