@@ -31,6 +31,7 @@ class PriceServer():
     
     DATE_FORMAT = "%Y-%m-%d"
     DAY_SERIES_FUNCTION = 'TIME_SERIES_DAILY'
+    DAY_SERIES_FUNCTION2 = 'TIME_SERIES_INTRADAY'
 
     def __init__(self, mkt_data_source):
         """source represents the source of the market data "Yahoo" or "Alpha". """
@@ -78,26 +79,67 @@ class PriceServer():
             print ("Exception in Price by Symbol!", file=sys.stderr)
             raise DataUnavailableEx("Price not found")
         
-    @UnimplementedMethod
+
     def getTodaysAveragePriceBySymbol(self, symbol):       
         """
         returns the average price of the security for the current day
         """
         self.mkt_data_srvr.setSymbol(symbol)
         #sets the function to intraday 
-        self.mkt_data_srvr.setSymbol(symbol).setFunction('TIME_SERIES_INTRADAY') 
-        #sets the interval to 60 minutes
-        self.mkt_data_srvr.setSymbol(symbol).setInterval('60min')
+        self.mkt_data_srvr.setFunction(PriceServer.DAY_SERIES_FUNCTION2) 
+        #sets the interval to 15 minutes
+        self.mkt_data_srvr.setInterval('15min')
         mkt_data = self.mkt_data_srvr.getDataAsJSON()
+        all_prices = []
+        i = 0
+        summ=0
         try:
             prices = self.mkt_data_srvr.getPrices(mkt_data)
-            priceForLast
-        return ''
-    
-    @UnimplementedMethod
+            today = datetime.now().strftime (PriceServer.DATE_FORMAT)
+            for key in prices.keys():
+                if key.startswith(today[:10]):
+#       debugging
+#                    print (i)
+#                    print (key)
+#                    print (prices[key]['4. close'])
+                    i+=1
+                    summ+=float(prices[key]['4. close'])
+            
+        except (DataUnavailableEx):
+            print("No data is available")
+        return round(summ/i, 4)
+        
+
     def getTodaysVolumeBySymbol(self, symbol):      
         """
         Returns ADTV for a security - the amount of individual securities traded in a day on average over a specified period of time (day).
         """
-        return ''
+        self.mkt_data_srvr.setSymbol(symbol)
+        #sets the function to intraday 
+        
+        self.mkt_data_srvr.setFunction(PriceServer.DAY_SERIES_FUNCTION2) 
+        
+        
+        #sets the interval to 15 minutes
+        self.mkt_data_srvr.setInterval('15min')
+        mkt_data = self.mkt_data_srvr.getDataAsJSON()
+        all_volume = 0
+        i=0
+        try:
+            prices = self.mkt_data_srvr.getPrices(mkt_data)
+            today = datetime.now().strftime (PriceServer.DATE_FORMAT)
+            for key in prices.keys():
+                if key.startswith(today[:10]):
+#   debugging
+#                    print (i)
+#                    print (key)
+#                    print (prices[key]['5. volume'])
+                    i+=1
+                    all_volume+=float(prices[key]['5. volume'])
+
+        except (DataUnavailableEx):
+            print("No data is available")
+          
+        return all_volume 
+
     
