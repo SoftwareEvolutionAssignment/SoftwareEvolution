@@ -343,8 +343,7 @@ class TradingApplication(Application):
             raise SymbolDoesNotExistError("Cannot find symbol")
         
         
-        print("Listing transactions for Security %s" % str(self.broker.getSecurityInfoBySymbol(symbol)) )
-        #print("Listing transactions for Security %s" % symbol )
+        print("Listing transactions for Security %s" % str(self.broker.getSecurityInfoBySymbol(symbol)))
         print('Date/Time                  clientID     transType     symbol        price          qty',
             '\n=======================================================================================')
         for transaction in self.transactions.values() :
