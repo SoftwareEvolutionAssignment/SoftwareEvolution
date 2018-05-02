@@ -28,9 +28,10 @@ Python 3 and Eclipse
 # Credits
 
 Author : Dr Adil Al-Yasiri
-Contributors : Omotola Shogunle 
-	       Norbert Norik
-	       Ibrahim Masembe
+Contributors :
+	 Omotola Shogunle 
+	 Norbert Norik
+	 Ibrahim Masembe
 
 
 
