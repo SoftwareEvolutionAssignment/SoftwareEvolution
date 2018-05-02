@@ -24,7 +24,7 @@ from server.price_Unavailable_Ex import PriceUnavailableEx
 from server.dataunavailable import DataUnavailableEx
 import sys
 import pprint
-from janitor.plugincore.exceptions import UnimplementedMethod
+#from janitor.plugincore.exceptions import UnimplementedMethod
 
 class PriceServer():
     """Class representing the pricing server used to get market data prices."""

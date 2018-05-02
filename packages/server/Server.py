@@ -32,7 +32,7 @@ Updated on 16 March 2018
 
 from abc import ABCMeta, abstractmethod
 
-import requests #for using http requests
+import requests 
 import sys
 
 class MarketDataServer(metaclass=ABCMeta)  :
@@ -85,7 +85,7 @@ class MarketDataServer(metaclass=ABCMeta)  :
         return requests.get(url).text
     
     def getDataAsJSON(self) :
-        """returns marekt data in json format."""
+        """returns market data in json format."""
         url = self.getURL()
         return requests.get(url).json()
     

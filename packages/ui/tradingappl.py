@@ -39,7 +39,7 @@ from ui.abstractapp import Application
 from ui.clientmanager import ClientManager
 from ui.symbolDoesNotExist import SymbolDoesNotExistError
 
-from server import price
+#from server import price
 from server.price import PriceServer
 from server.alphavantage import Alphavantage
 from server.dataunavailable import DataUnavailableEx
