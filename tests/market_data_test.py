@@ -72,19 +72,19 @@ class MarketDataTest(unittest.TestCase):
         url = self.alpha.getURL()
         self.assertRegex(url, 'https://.*/.*?', 'URL of server should match a REGEX')
     
-    @unittest.skip("skipping yahoo json test")
+    #@unittest.skip("skipping yahoo json test")
     def test_get_Yahoo_data_as_json(self):
         self.assertTrue('chart' in self.yahoo.getDataAsJSON(), 'Data from server looks like a json object')
     
-    @unittest.skip("skipping yahoo text test")
+    #@unittest.skip("skipping yahoo text test")
     def test_get_Yahoo_data_as_text(self):
         self.assertRegex(self.yahoo.getDataAsText(), self.json_regex, 'Text from server looks like a json object')
         
-    @unittest.skip("skipping alpha json test")
+    #@unittest.skip("skipping alpha json test")
     def test_get_Alphavantage_data_as_json(self):
         self.assertTrue('Meta Data' in self.alpha.getDataAsJSON(), 'Data from server looks like a json object')
     
-    @unittest.skip("skipping alpha text test")
+    #@unittest.skip("skipping alpha text test")
     def test_get_Alphavantage_data_as_text(self):
         self.assertRegex(self.alpha.getDataAsText(), self.json_regex, 'Text from server looks like a json object')
         

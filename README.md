@@ -1,2 +1,3 @@
-# SoftwareEvolution
-In this module we were tasked to reegineer a program built by our lecturer. The program deals with selling and buying securities on the stock market
+# Software Evolution Project- Securities Trading System
+The Security Trading System is a console application originally built by Dr Adil Al-Yasiri which specializes in querying market data to buy and sell securities. It uses a menu-driven application which can be operated by traders(staff of the firm that use the console application) or clients (of the firm). Traders are allowed to buy securities as a form of investment, and the quantity of secuirity both determines the number of positions a client holds on a secuirty like 'GOOG' for example. The secuirities are represented with symbols in the application. The system does not support short positions that is clients selling positions that they do not own, it only supports long positions. 
+
