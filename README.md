@@ -21,8 +21,6 @@ First of inorder to run this application on your system, it is advised you run i
 
 Upon executing the file you are greeted with a System's Main menu with options 1,2, 9 and 0. Traders often use the option 1 to manage clients, if option 1 is input a displayed list of options is shown from 1-6 and 0 to return to main menu. Clients use option 2 to trade securites when the option is input a list is displayed of options 1-10 and 0 again to return to the main menu. Every option has specific instructions to carry out and message displayed back to the user.
 
-# Test Coverage 
-This section shows screen shots of the vital operations of clients and traders 
 
 # Built with
 
